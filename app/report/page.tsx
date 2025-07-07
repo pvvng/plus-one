@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const redirectUrl =
-  "https://github.com/pvvng/plus-one/issues/new?template=bug_report.yml";
+  "https://github.com/pvvng/plus-one/issues/new?template=버그-리포트.md";
 
 export default function ReportPage() {
   const [confirmed, setConfirmed] = useState(false);
