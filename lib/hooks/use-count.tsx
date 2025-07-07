@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
+/** plus one count realtime subscribe hook */
 export function useCounts() {
   const [isLoading, setIsLoading] = useState(true);
   const [total, setTotal] = useState(0);
