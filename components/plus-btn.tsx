@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import gsap from "gsap";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function PlusBtn() {
+  const [isLoading, setIsLoading] = useState(false);
   const charsRef = useRef<HTMLSpanElement[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const getFingerprint = async () => {
     const fp = await FingerprintJS.load();
@@ -15,7 +18,34 @@ export default function PlusBtn() {
   };
 
   const handleClick = async () => {
+    if (!executeRecaptcha) {
+      return alert("reCAPTCHA 로딩 중입니다...");
+    }
+    setIsLoading(true);
+
+    // reCAPTCHA token
+    const token = await executeRecaptcha("plus_one");
+    const tokenResponse = await fetch("/api/recaptcha-verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    const verified = await tokenResponse.json();
+    if (!verified.success) {
+      return alert(
+        verified.message || "로봇 의심됨. 나중에 다시 시도해 주세요."
+      );
+    }
+
+    // fingerprint ID
     const id = await getFingerprint();
+
+    if (!id || !token) {
+      return alert("플러스원 실패. 나중에 다시 시도해 주세요.");
+    }
 
     const response = await fetch("/api/click", {
       method: "POST",
@@ -26,6 +56,8 @@ export default function PlusBtn() {
     });
 
     const data = await response.json();
+    setIsLoading(false);
+
     if (data.success) {
       alert(data.message || "플러스원 성공!");
     } else {
@@ -86,8 +118,12 @@ export default function PlusBtn() {
     <button
       id="plus-btn"
       ref={btnRef}
+      disabled={isLoading}
+      aria-label="플러스원 버튼"
+      title="플러스원 버튼"
       onClick={handleClick}
-      className="font-semibold rounded min-w-32 px-3 py-2 cursor-pointer shadow text-lg
+      className="font-semibold rounded min-w-32 px-3 py-2 cursor-pointer shadow text-lg 
+      disabled:cursor-not-allowed disabled:bg-neutral-400
       bg-blue-500 hover:bg-blue-600 active:scale-95 text-yellow-400 hover:text-amber-400"
     >
       {text.split("").map((char, i) => (

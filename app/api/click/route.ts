@@ -2,6 +2,13 @@ import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { error: "허용되지 않은 메서드입니다." },
+      { status: 405 }
+    );
+  }
+
   const body = await req.json();
   const uuid = body.id;
 
