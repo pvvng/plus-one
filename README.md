@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 플러스원 (Plus One)
 
-## Getting Started
+> 재미와 기술을 결합한 간단한 카운팅 프로젝트.  
+> 하루에 한 번만 누를 수 있는 "플러스원!" 버튼을 통해 숫자가 올라가며, 실시간으로 결과가 반영됩니다.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 데모
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> 👉 []
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ 기술 스택
 
-## Learn More
+- **Next.js 14 (App Router)**
+- **Supabase Realtime Database**
+- **React + Tailwind CSS + GSAP**
+- **Server-Sent Events (SSE)**
+- **Google reCAPTCHA v3**
+- **FingerprintJS** – 사용자 식별
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 주요 기능
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### ✅ 1. **하루에 한 번만 누를 수 있는 플러스원 버튼**
 
-## Deploy on Vercel
+- IP + Fingerprint 조합으로 사용자 제한
+- 같은 사용자는 24시간 이내 중복 클릭 불가
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ✅ 2. **Supabase Realtime 기반 실시간 카운트 반영**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 버튼 클릭 시 Supabase DB의 count_logs 추가. 이를 집계하여 플러스원 갯수 체크
+- 다른 사용자의 화면에도 **실시간 반영 (Server-Sent Events 기반)**
+
+### ✅ 3. **Google reCAPTCHA v3 봇 방지**
+
+- 봇 트래픽 차단
+- 클릭 전 invisible reCAPTCHA로 사용자 행동 검증
+
+### ✅ 4. **FingerprintJS를 통한 사용자 식별**
+
+- IP 주소 외에도 브라우저 기반의 고유 식별자(Fingerprint)를 사용해
+  하루 1회 제한을 보다 정밀하게 적용
+
+---
+
+## 📡 실시간 업데이트 구조 (SSE + Supabase Realtime)
+
+1. 사용자가 버튼 클릭 → API 호출 → Supabase DB 업데이트
+2. Supabase Realtime이 DB 변화 감지
+3. 클라이언트는 **SSE 채널을 통해 변화 감지** → 실시간으로 숫자 업데이트
