@@ -65,7 +65,7 @@ export default function PlusBtn({ isError = false }: { isError?: boolean }) {
     }
   };
 
-  // ⌨️ 엔터키 눌렀을 때 버튼 클릭
+  // 엔터키 눌렀을 때 버튼 클릭
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -88,7 +88,7 @@ export default function PlusBtn({ isError = false }: { isError?: boolean }) {
       title="플러스 원!"
       onClick={handleClick}
       className="font-semibold rounded min-w-32 px-3 py-2 cursor-pointer shadow text-lg 
-      disabled:cursor-not-allowed disabled:bg-neutral-400 disabled:text-neutral-200
+      disabled:cursor-not-allowed disabled:bg-neutral-400 disabled:text-neutral-200 disabled:active:scale-none
       bg-blue-500 hover:bg-blue-600 active:scale-95 text-yellow-400 hover:text-amber-400"
     >
       {renderText}
