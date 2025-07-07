@@ -1,4 +1,3 @@
-import Footer from "@/components/footer";
 import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";

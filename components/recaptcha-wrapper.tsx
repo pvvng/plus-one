@@ -9,7 +9,13 @@ const GoogleCaptcha = ({ children }: { children: React.ReactNode }) => {
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={recaptchaKey}
-      scriptProps={{ async: true, defer: true }}
+      scriptProps={{
+        id: "recaptcha-script",
+        async: true,
+        defer: true,
+      }}
+      language="ko" // 한국어로 설정
+      useEnterprise={true} // 엔터프라이즈 버전 사용
     >
       {children}
     </GoogleReCaptchaProvider>

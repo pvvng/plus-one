@@ -10,7 +10,7 @@ export default function UpdatePage() {
       >
         메인화면으로
       </Link>
-      <hr className="border-2 border-neutral-200 border-dashed" />
+      <hr className="border border-neutral-200 border-dashed" />
       <div className="py-5 space-y-5">{/* TODO: 업데이트 내역 */}</div>
     </main>
   );
