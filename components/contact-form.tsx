@@ -3,7 +3,7 @@
 export default function ContactForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
+    // const form = event.currentTarget;
     alert("문의가 접수되었습니다. 이용해주셔서 감사합니다!");
   };
 
