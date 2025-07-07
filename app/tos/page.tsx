@@ -1,6 +1,10 @@
-"use client";
-
 import Link from "next/link";
+
+// terms page (이용약관)
+export const metadata = {
+  title: "이용약관",
+  description: "플러스원 서비스 이용과 관련한 약관 내용을 안내합니다.",
+};
 
 export default function TermsOfServicePage() {
   return (

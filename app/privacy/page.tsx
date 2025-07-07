@@ -1,6 +1,11 @@
-"use client";
-
 import Link from "next/link";
+
+// privacy page (개인정보 처리방침)
+export const metadata = {
+  title: "개인정보 처리방침",
+  description:
+    "플러스원 서비스에서 수집하는 개인정보와 처리 방침에 대해 안내합니다.",
+};
 
 export default function PrivacyPolicyPage() {
   return (

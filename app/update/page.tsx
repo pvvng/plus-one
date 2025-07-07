@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+// update page (업데이트)
+export const metadata = {
+  title: "업데이트 내역",
+  description: "플러스원 서비스의 최신 업데이트 내역과 변경 사항을 확인하세요.",
+};
+
 export default function UpdatePage() {
   return (
     <main className="max-w-screen-sm mx-auto px-4 py-10 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
