@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function TermsOfServicePage() {
   return (
-    <main className="max-w-screen-sm mx-auto px-5 py-12 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
+    <main className="max-w-screen-sm mx-auto py-12 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
       <h1 className="text-3xl font-bold mb-6">이용약관</h1>
       <p className="text-xs text-neutral-500 mb-4">시행일자: 2025년 7월 7일</p>
 
@@ -15,7 +15,7 @@ export default function TermsOfServicePage() {
         href="/"
         className="inline-block mb-10 text-xs text-blue-500 hover:text-blue-600 underline"
       >
-        ← 메인화면으로 돌아가기
+        메인화면으로
       </Link>
 
       <section className="space-y-8">

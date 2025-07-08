@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <GoogleCaptcha>
-      <main className="w-full h-screen flex justify-center items-center p-5 font-paperlogy">
+      <main className="w-full max-w-screen-sm mx-auto h-screen flex justify-center items-center p-5 font-paperlogy">
         <section className="space-y-3 text-center">
           <div>
             <Image
