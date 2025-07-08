@@ -34,7 +34,8 @@ export default async function UpdatePage() {
         {updates.map(({ id, title, payload, created_at }) => (
           <article
             key={id}
-            className="p-3 border-neutral-100 last:border-b odd:bg-neutral-100"
+            className="p-3 border-neutral-100 last:border-b odd:bg-neutral-100 
+            odd:dark:bg-neutral-900 dark:border-neutral-900"
           >
             <p className="font-semibold">{title}</p>
             <p className="text-xs text-neutral-500">

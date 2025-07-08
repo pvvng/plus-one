@@ -11,7 +11,7 @@ export default function UpdateForm() {
       <div>
         <label
           htmlFor="title"
-          className="block text-sm font-medium text-neutral-700 mb-1"
+          className="block text-sm font-medium text-neutral-500 mb-1"
         >
           제목
         </label>
@@ -26,7 +26,7 @@ export default function UpdateForm() {
       <div>
         <label
           htmlFor="payload"
-          className="block text-sm font-medium text-neutral-700 mb-1"
+          className="block text-sm font-medium text-neutral-500 mb-1"
         >
           업데이트 내용
         </label>
