@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function PlusBtn({ isError = false }: { isError?: boolean }) {
@@ -11,16 +10,11 @@ export default function PlusBtn({ isError = false }: { isError?: boolean }) {
   // reCAPTCHA 훅
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const getFingerprint = async () => {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    return result.visitorId;
-  };
-
   const handleClick = async () => {
     if (!executeRecaptcha) {
       return alert("reCAPTCHA 로딩 중입니다...");
     }
+
     setIsLoading(true);
 
     // reCAPTCHA token
@@ -40,19 +34,16 @@ export default function PlusBtn({ isError = false }: { isError?: boolean }) {
       );
     }
 
-    // fingerprint ID
-    const id = await getFingerprint();
-
-    if (!id || !token) {
+    if (!token) {
       return alert("플러스원 실패. 나중에 다시 시도해 주세요.");
     }
 
+    // 서버에 클릭 이벤트 전송
     const response = await fetch("/api/click", {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }),
     });
 
     const data = await response.json();
