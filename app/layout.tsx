@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "pvvng", url: "https://github.com/pvvng" }],
   creator: "pvvng",
+  verification: {
+    google: "Yut95kbht-xjM1IV-Xnguy0G7PbTKVSila5HH1QBong",
+  },
 };
 
 export default function RootLayout({
