@@ -47,6 +47,7 @@ export default function PlusBtn({ isError = false }: { isError?: boolean }) {
       return alert("플러스원 실패. 나중에 다시 시도해 주세요.");
     }
 
+    // 서버에 클릭 이벤트 전송
     const response = await fetch("/api/click", {
       method: "POST",
       headers: {
