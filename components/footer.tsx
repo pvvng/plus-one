@@ -13,7 +13,7 @@ const faqLinks = [
 
 export default function Footer() {
   return (
-    <footer className="w-full mx-auto p-5 bg-neutral-50 font-paperlogy">
+    <footer className="w-full mx-auto p-5 bg-neutral-50 dark:bg-neutral-900 font-paperlogy">
       <div className="max-w-screen-sm mx-auto space-y-5">
         <section className="grid grid-cols-4">
           <div>
@@ -23,7 +23,7 @@ export default function Footer() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="text-neutral-700 hover:text-neutral-500"
+                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
                   >
                     {label}
                   </Link>
@@ -38,7 +38,7 @@ export default function Footer() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="text-neutral-700 hover:text-neutral-500"
+                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
                   >
                     {label}
                   </Link>
