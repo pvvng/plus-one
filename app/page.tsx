@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <GoogleCaptcha>
-      <main className="w-full h-screen flex justify-center items-center p-5 font-paperlogy">
+      <main className="w-full max-w-screen-sm mx-auto h-screen flex justify-center items-center p-5 font-paperlogy">
         <section className="space-y-3 text-center">
           <div>
             <Image
@@ -18,6 +18,7 @@ export default function Home() {
               draggable={false}
             />
             <h1 className="text-3xl font-semibold">플러스원!</h1>
+            <h2 className="text-sm text-neutral-500">하루 한 번, 모두의 +1</h2>
           </div>
           <View />
         </section>

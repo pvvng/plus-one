@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="max-w-screen-sm mx-auto px-4 py-10 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
+    <main className="max-w-screen-sm mx-auto py-12 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
       <h1 className="text-2xl font-bold mb-4">개인정보 처리방침</h1>
       <p className="text-xs text-neutral-500 mb-2">시행일자: 2025년 7월 7일</p>
       <Link
