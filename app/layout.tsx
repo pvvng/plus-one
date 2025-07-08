@@ -34,7 +34,10 @@ export const metadata: Metadata = {
   authors: [{ name: "pvvng", url: "https://github.com/pvvng" }],
   creator: "pvvng",
   verification: {
-    google: "Yut95kbht-xjM1IV-Xnguy0G7PbTKVSila5HH1QBong",
+    google: "X8abBNxolxp2vkT2B7w1uCMZm9zkCEGLo0xpbL7Fw9U",
+  },
+  other: {
+    "google-adsense-account": "ca-pub-7034464923554278",
   },
 };
 
