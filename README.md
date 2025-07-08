@@ -1,3 +1,5 @@
+<img src="https://github.com/user-attachments/assets/eeecb14e-8b86-4db1-9baa-4253ec0800d3" width="10%" />
+
 # 플러스원! (Plus One)
 
 > 재미와 기술을 결합한 간단한 카운팅 프로젝트.  
