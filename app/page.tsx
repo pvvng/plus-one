@@ -18,6 +18,7 @@ export default function Home() {
               draggable={false}
             />
             <h1 className="text-3xl font-semibold">플러스원!</h1>
+            <h2 className="text-sm text-neutral-500">하루 한 번, 모두의 +1</h2>
           </div>
           <View />
         </section>
