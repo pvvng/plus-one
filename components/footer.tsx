@@ -15,7 +15,7 @@ export default function Footer() {
   return (
     <footer className="w-full mx-auto p-5 bg-neutral-50 dark:bg-neutral-900 font-paperlogy">
       <div className="max-w-screen-sm mx-auto space-y-5">
-        <section className="grid grid-cols-4">
+        <section className="grid grid-cols-2">
           <div>
             <p className="font-semibold text-lg">정보</p>
             <ul className="flex flex-col gap-1 mt-2">
@@ -47,7 +47,7 @@ export default function Footer() {
             </ul>
           </div>
         </section>
-        <section className="mt-4 space-y-2 text-end">
+        <section className="mt-4 space-y-2 sm:text-end">
           <p className="text-xs text-neutral-400">
             © 2025{" "}
             <Link

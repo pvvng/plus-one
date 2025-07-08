@@ -12,7 +12,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-neutral-700 mb-1"
+          className="block text-sm font-medium text-neutral-500 mb-1"
         >
           이름
         </label>
@@ -26,7 +26,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-neutral-700 mb-1"
+          className="block text-sm font-medium text-neutral-500 mb-1"
         >
           이메일 주소
         </label>
@@ -41,7 +41,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="message"
-          className="block text-sm font-medium text-neutral-700 mb-1"
+          className="block text-sm font-medium text-neutral-500 mb-1"
         >
           문의 내용
         </label>

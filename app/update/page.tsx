@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getUpdates } from "./actions";
 
 // update page (업데이트)
 export const metadata = {
@@ -6,9 +7,13 @@ export const metadata = {
   description: "플러스원 서비스의 최신 업데이트 내역과 변경 사항을 확인하세요.",
 };
 
-export default function UpdatePage() {
+export default async function UpdatePage() {
+  const isDev = process.env.NODE_ENV === "development";
+
+  const updates = await getUpdates();
+
   return (
-    <main className="max-w-screen-sm mx-auto py-12 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy min-h-screen">
+    <main className="max-w-screen-sm h-screen overflow-scroll mx-auto py-12 px-5 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy">
       <h1 className="text-2xl font-bold mb-4">업데이트 내역</h1>
       <Link
         href="/"
@@ -16,8 +21,30 @@ export default function UpdatePage() {
       >
         메인화면으로
       </Link>
+      {isDev && (
+        <Link
+          href="/update/add"
+          className="inline-block mb-4 px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded transition cursor-pointer"
+        >
+          업데이트 추가
+        </Link>
+      )}
       <hr className="border border-neutral-200 border-dashed" />
-      <div className="py-5 space-y-5">{/* TODO: 업데이트 내역 */}</div>
+      <section className="py-5">
+        {updates.map(({ id, title, payload, created_at }) => (
+          <article
+            key={id}
+            className="p-3 border-neutral-100 last:border-b odd:bg-neutral-100 
+            odd:dark:bg-neutral-900 dark:border-neutral-900"
+          >
+            <p className="font-semibold">{title}</p>
+            <p className="text-xs text-neutral-500">
+              {created_at.split("T")[0]}
+            </p>
+            <p className="mt-2">{payload}</p>
+          </article>
+        ))}
+      </section>
     </main>
   );
 }
