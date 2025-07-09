@@ -4,6 +4,7 @@ import { paperlogy } from "./fonts/paperlogy";
 import "./globals.css";
 import Script from "next/script";
 import Footer from "@/components/footer";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,6 +59,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${paperlogy.variable} antialiased`}
       >
         {children}
+        <Toaster />
         <Footer />
       </body>
     </html>

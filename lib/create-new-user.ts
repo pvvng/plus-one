@@ -36,7 +36,7 @@ export async function createNewUser({
 
     return buildAPIResponse({
       success: false,
-      message: error?.message,
+      message: "플러스원 생성 중 오류가 발생했습니다.",
       status: 500,
     });
   }

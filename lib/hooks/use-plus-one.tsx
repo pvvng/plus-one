@@ -1,7 +1,9 @@
 "use client";
 
+import CustomToast from "@/components/custom-toast";
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { toast } from "sonner";
 
 export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,8 +11,9 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
 
   const trigger = async () => {
     if (!executeRecaptcha) {
-      alert("reCAPTCHA 로딩 중입니다...");
-      return;
+      return toast(
+        <CustomToast success={false} message="reCAPTCHA 로딩 중입니다..." />
+      );
     }
 
     setIsLoading(true);
@@ -24,19 +27,30 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
       });
       const verified = await verify.json();
       if (!verified.success) {
-        return alert(verified.message || "로봇 의심됨. 다시 시도해 주세요.");
+        return toast(
+          <CustomToast
+            success={false}
+            message={verified.message || "로봇 의심됨. 다시 시도해 주세요."}
+          />
+        );
       }
 
       const res = await fetch("/api/click");
       const data = await res.json();
       if (data.success) {
-        alert(data.message || "플러스원 성공!");
         onSuccess();
-      } else {
-        alert(data.message || "플러스원 실패. 다시 시도해 주세요.");
       }
+
+      return toast(
+        <CustomToast success={data.success} message={data.message} />
+      );
     } catch (e) {
-      alert("에러가 발생했습니다. 다시 시도해 주세요.");
+      toast(
+        <CustomToast
+          success={false}
+          message="오류가 발생했습니다. 다시 시도해 주세요."
+        />
+      );
     } finally {
       setIsLoading(false);
     }

@@ -20,11 +20,11 @@ export async function GET(req: NextRequest) {
 
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
-
   const now = new Date();
+  const isDev = process.env.NODE_ENV === "development";
 
   // 로컬에서 테스트할 경우 무조건 통과
-  if (ip === "::1" || ip === "127.0.0.1") {
+  if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
     // 유저 생성없이 로그만 추가
     await supabase
       .from("click_logs")
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
 
     return buildAPIResponse({
       success: false,
-      message: fetchError?.message,
+      message: "플러스원 기록 조회 중 오류가 발생했습니다.",
       status: 500,
     });
   }

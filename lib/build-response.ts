@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 interface BuildAPIResponseInput {
   success: boolean;
   status: number;
-  message?: string;
+  message: string;
 }
 
 export function buildAPIResponse({
