@@ -27,17 +27,17 @@ export async function GET(req: NextRequest) {
   today.setHours(0, 0, 0, 0);
 
   // 로컬에서 테스트할 경우 무조건 통과
-  if (ip === "::1" || ip === "127.0.0.1") {
-    await supabase
-      .from("click_logs")
-      .insert([{ ip, clicked_at: now.toISOString() }]);
+  // if (ip === "::1" || ip === "127.0.0.1") {
+  //   await supabase
+  //     .from("click_logs")
+  //     .insert([{ ip, clicked_at: now.toISOString() }]);
 
-    return buildAPIResponse({
-      success: true,
-      message: "플러스원 성공! (로컬 테스트)",
-      status: 200,
-    });
-  }
+  //   return buildAPIResponse({
+  //     success: true,
+  //     message: "플러스원 성공! (로컬 테스트)",
+  //     status: 200,
+  //   });
+  // }
 
   const { id: sessionId } = await getSession();
 
