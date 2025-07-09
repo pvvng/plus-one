@@ -8,7 +8,6 @@ export interface RemainTime {
   minutesLeft: number;
   secondsLeft: number;
   canClick: boolean;
-  devOverride?: boolean;
 }
 
 type SessionData = {
@@ -16,27 +15,23 @@ type SessionData = {
   clickedAt: string | undefined;
 };
 
-const isDev = process.env.NODE_ENV === "development";
-
 const INITIAL_REMAIN_TIME = {
   hoursLeft: 24,
   minutesLeft: 0,
   secondsLeft: 0,
   canClick: false,
-  devOverride: isDev ? true : false,
 };
 
-export function useRemainTime() {
+export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
   const [remainTime, setRemainTime] = useState<RemainTime>(INITIAL_REMAIN_TIME);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const initRemainTime = (canClick = false) => {
+  const initRemainTime = (_canClick = false) => {
     setRemainTime({
       hoursLeft: 24,
       minutesLeft: 0,
       secondsLeft: 0,
-      canClick,
-      devOverride: isDev ? true : false,
+      canClick: devMode || _canClick,
     });
   };
 
@@ -54,10 +49,10 @@ export function useRemainTime() {
 
         // 세션 clickedAt 기반으로 남은 시간 계산
         const remainStatus = getRemainTimeStatus(session.clickedAt);
-        return setRemainTime((prev) => ({
+        return setRemainTime({
           ...remainStatus,
-          devOverride: prev?.devOverride ?? false, // 이전 devOverride 유지
-        }));
+          canClick: devMode ? true : remainStatus.canClick,
+        });
       } catch (e) {
         console.error("남은 시간 불러오기 실패:", e);
         // 오류가 나도 그냥 클릭 가능하게 처리
@@ -73,8 +68,8 @@ export function useRemainTime() {
   const updateRemainTime = (prev: RemainTime) => {
     if (!prev) return INITIAL_REMAIN_TIME;
 
-    // 개발 모드에서는 무조건 클릭 가능
-    if (prev.devOverride) {
+    // 개발 모드일때는 항상 클릭 가능
+    if (devMode) {
       return { ...prev, canClick: true };
     }
 
@@ -102,13 +97,14 @@ export function useRemainTime() {
 
   useEffect(() => {
     if (!remainTime || remainTime.canClick) return;
+    if (devMode) return;
 
     const interval = setInterval(() => {
       setRemainTime(updateRemainTime);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainTime]);
+  }, [remainTime, devMode]);
 
   return { remainTime, isLoading, initRemainTime };
 }

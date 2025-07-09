@@ -7,12 +7,14 @@ import PlusBtn from "./plus-btn";
 import PlusOneStatus from "./plus-one-status";
 
 export default function View() {
+  const devMode = process.env.NODE_ENV === "development";
+
   const countState = useCounts();
   const {
     remainTime,
     isLoading: isRemainTimeLoading,
     initRemainTime,
-  } = useRemainTime();
+  } = useRemainTime({ devMode });
   const { trigger, isLoading: isPlusOneLoading } = usePlusOne({
     onSuccess: initRemainTime,
   });
