@@ -8,7 +8,13 @@ interface CustomToastProps {
 export default function CustomToast({ success, message }: CustomToastProps) {
   return (
     <div className="font-paperlogy flex gap-2 items-center">
-      <Image src="/plusone.webp" alt="플러스원! 로고" width={40} height={40} />
+      <Image
+        src="/plusone.webp"
+        alt="플러스원! 로고"
+        width={40}
+        height={40}
+        draggable={false}
+      />
       <div>
         <p
           className={`${
