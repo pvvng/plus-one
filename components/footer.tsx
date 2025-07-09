@@ -51,7 +51,7 @@ export default function Footer() {
           <p className="text-xs text-neutral-400">
             © 2025{" "}
             <Link
-              href="#"
+              href="https://github.com/pvvng"
               target="_blank"
               className="text-blue-500 hover:text-blue-600 underline"
             >
