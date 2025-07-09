@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Activity,
   ActivityCalendar,
@@ -21,7 +21,7 @@ const explicitTheme: ThemeInput = {
 const labels = {
   months: [...Array(12)].map((_, i) => `${i + 1}월`),
   weekdays: ["일", "월", "화", "수", "목", "금", "토"],
-  totalCount: "총 {{count}}일 플러스원!",
+  totalCount: "현재 플러스원: {{count}}개",
 } satisfies CalendarProps["labels"];
 
 export default function ActivityCalendarWrapper() {
@@ -52,19 +52,28 @@ export default function ActivityCalendarWrapper() {
   }, []);
 
   return (
-    <section className="w-full flex justify-center items-center p-5">
+    <section
+      className="w-full max-w-xl mx-auto flex justify-center items-center p-5 relative"
+      style={{ direction: "rtl" }}
+    >
+      {/* 좌측 오버레이 */}
+      <div
+        className="pointer-events-none absolute left-0 top-0 bottom-0 
+        w-12 z-10 bg-gradient-to-r from-background to-transparent"
+      />
+
       <ActivityCalendar
         data={activity}
         blockMargin={5}
         blockRadius={2}
-        blockSize={18}
+        blockSize={20}
         maxLevel={1}
         loading={isLoading}
         hideColorLegend
         labels={labels}
         totalCount={totalCount}
         fontSize={14}
-        weekStart={0}
+        weekStart={1}
         theme={explicitTheme}
         renderBlock={(block, activity) => (
           <CalendarBlockTooltip activity={activity}>
