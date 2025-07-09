@@ -11,6 +11,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-paperlogy: var(--font-paperlogy);
+
+  --animate-fade-in: fade-in 0.15s ease-out;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,4 +30,17 @@ body {
 
 .grecaptcha-badge {
   display: none;
+}
+
+/* ✨ 애니메이션 추가 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
