@@ -1,9 +1,8 @@
-import { ONE_DAY_MS } from "@/constant";
 import { getSession } from "@/lib/session";
 import { supabase } from "@/lib/supabase";
 import { createNewUser } from "@/lib/create-new-user";
-import { getTimeLeftUntil24Hours } from "@/lib/get-time-left";
 import { buildAPIResponse } from "@/lib/build-response";
+import { getRemainTimeStatus } from "@/lib/get-remain-time-status";
 import { NextRequest } from "next/server";
 
 /**
@@ -21,13 +20,12 @@ export async function GET(req: NextRequest) {
 
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
-
   const now = new Date();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const isDev = process.env.NODE_ENV === "development";
 
   // 로컬에서 테스트할 경우 무조건 통과
-  if (ip === "::1" || ip === "127.0.0.1") {
+  if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
+    // 유저 생성없이 로그만 추가
     await supabase
       .from("click_logs")
       .insert([{ ip, clicked_at: now.toISOString() }]);
@@ -39,11 +37,28 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  const { id: sessionId } = await getSession();
+  const session = await getSession();
+  const { id: sessionId, clickedAt } = session;
 
-  // 세션이 없으면 새로 생성
-  if (!sessionId) {
+  // 제대로 된 세션이 아닐 경우
+  if (!sessionId || !clickedAt) {
+    // 세션이 불완전하므로 파기
+    await session.destroy();
+    // 새 유저 생성
     return await createNewUser({ ip, now });
+  }
+
+  const remainTimeStatus = getRemainTimeStatus(clickedAt);
+
+  // 남은 시간 세션의 값을 바탕으로 에러 처리
+  if (!remainTimeStatus.canClick) {
+    const { hoursLeft, minutesLeft, secondsLeft } = remainTimeStatus;
+
+    return buildAPIResponse({
+      success: false,
+      message: `다음 플러스원까지 ${hoursLeft}시간 ${minutesLeft}분 ${secondsLeft}초 남았어요.`,
+      status: 429,
+    });
   }
 
   // 세션이 존재하는 경우엔 기존 클릭 확인
@@ -58,30 +73,25 @@ export async function GET(req: NextRequest) {
 
     return buildAPIResponse({
       success: false,
-      message: fetchError?.message,
+      message: "플러스원 기록 조회 중 오류가 발생했습니다.",
       status: 500,
     });
   }
 
   // 세션은 존재하는데 클릭 기록이 없는 경우 -> 신규 사용자로 추가
   if (!existing) {
+    console.warn(
+      `세션 ID(${sessionId})에 대한 클릭 기록이 없습니다. 새 사용자로 처리합니다.`
+    );
+
+    await session.destroy();
     return await createNewUser({ ip, now });
   }
 
-  // 기존 세션이 존재하는 경우
-  const prevClick = new Date(existing.clicked_at);
-  const diff = now.getTime() - prevClick.getTime();
-
-  // 24시간 이내에 다시 클릭한 경우
-  if (diff < ONE_DAY_MS) {
-    const { hoursLeft, minutesLeft, secondsLeft } =
-      getTimeLeftUntil24Hours(diff);
-
-    return buildAPIResponse({
-      success: false,
-      message: `다음 플러스원까지 ${hoursLeft}시간 ${minutesLeft}분 ${secondsLeft}초 남았어요.`,
-      status: 429,
-    });
+  // db clicked_at과 세션의 clicketAt 둘이 값이 다른 상황 -> 신규 사용자로 추가
+  if (existing.clicked_at !== clickedAt) {
+    await session.destroy();
+    return await createNewUser({ ip, now });
   }
 
   // 기존 사용자 & 24시간 경과 -> 업데이트

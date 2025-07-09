@@ -36,7 +36,7 @@ export async function createNewUser({
 
     return buildAPIResponse({
       success: false,
-      message: error?.message,
+      message: "플러스원 생성 중 오류가 발생했습니다.",
       status: 500,
     });
   }
@@ -46,9 +46,10 @@ export async function createNewUser({
     .from("click_logs")
     .insert([{ uuid, ip, clicked_at: now.toISOString() }]);
 
-  // 세션에 ID 저장
+  // 세션에 ID, 클릭 시간 저장
   const session = await getSession();
   session.id = uuid;
+  session.clickedAt = now.toISOString();
   await session.save();
 
   return buildAPIResponse({

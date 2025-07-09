@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 export type SessionData = {
   id?: string; // 클릭 시 발급된 고유 ID
+  clickedAt?: string; // 클릭한 시간 ISOString
 };
 
 export const sessionOptions: SessionOptions = {
