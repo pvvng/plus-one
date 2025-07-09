@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Activity,
   ActivityCalendar,
@@ -9,7 +9,9 @@ import {
   ThemeInput,
 } from "react-activity-calendar";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { generatePastYearData } from "@/lib/generate-past-year-data";
+import { ActivityData } from "@/lib/generate-past-year-data";
+import { toast } from "sonner";
+import CustomToast from "./custom-toast";
 
 const explicitTheme: ThemeInput = {
   light: ["#f0f0f0", "#3B82F6"],
@@ -23,17 +25,44 @@ const labels = {
 } satisfies CalendarProps["labels"];
 
 export default function ActivityCalendarWrapper() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const [activity, setActivity] = useState<ActivityData[]>([]);
+
+  useEffect(() => {
+    const getActivities = async () => {
+      setIsLoading(true);
+      const response = await fetch("/api/activity");
+      const json = await response.json();
+      setActivity(json.data.activity);
+      setTotalCount(json.data.count);
+      setIsLoading(false);
+
+      if (!json.success) {
+        toast(
+          <CustomToast
+            success={false}
+            message={`스트릭 데이터를 불러오는 중 에러가 발생했습니다.\n새로고침 후 다시 시도해주세요.`}
+          />
+        );
+      }
+    };
+
+    getActivities();
+  }, []);
+
   return (
     <section className="w-full flex justify-center items-center p-5">
       <ActivityCalendar
-        data={generatePastYearData(new Date().toISOString())}
+        data={activity}
         blockMargin={5}
         blockRadius={2}
         blockSize={18}
         maxLevel={1}
+        loading={isLoading}
         hideColorLegend
         labels={labels}
-        totalCount={0}
+        totalCount={totalCount}
         fontSize={14}
         weekStart={0}
         theme={explicitTheme}

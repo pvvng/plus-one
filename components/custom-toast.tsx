@@ -23,7 +23,7 @@ export default function CustomToast({ success, message }: CustomToastProps) {
         >
           {success ? message : "에러가 발생했습니다."}
         </p>
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-neutral-600 text-wrap whitespace-break-spaces">
           {success ? "내일도 플러스원 해주세요 :)" : message}
         </p>
       </div>

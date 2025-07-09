@@ -1,9 +1,13 @@
-type ActivityData = {
+export type ActivityData = {
   date: string;
   count: number;
   level: number;
 };
 
+/**
+ * baseDate 기준으로 이전 1년치 스트릭 데이터를 생성하는 함수
+ * @param baseDate 기준 날짜
+ */
 export function generatePastYearData(baseDate: string): ActivityData[] {
   const end = new Date(baseDate); // 기준일
   const start = new Date(end);
