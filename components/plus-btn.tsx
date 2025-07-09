@@ -32,7 +32,7 @@ export default function PlusBtn({
   }, []);
 
   const renderText = isLoading
-    ? "플러스 중.."
+    ? "로딩 중.."
     : canClick
     ? "플러스 원!"
     : `다음 클릭까지 ${hoursLeft}:${String(minutesLeft).padStart(

@@ -25,10 +25,16 @@ export default function PlusOneStatus({
     );
   }
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return (
+      <div className="min-h-28 flex justify-center items-center">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
-    <>
+    <section className="min-h-28 flex flex-col gap-3 justify-center items-center">
       <h2>
         <span className="text-sm">지금까지 총</span>{" "}
         <AnimatedNumber
@@ -45,6 +51,6 @@ export default function PlusOneStatus({
           개의 플러스원이 추가됐어요.
         </span>
       </p>
-    </>
+    </section>
   );
 }

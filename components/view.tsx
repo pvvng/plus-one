@@ -8,19 +8,22 @@ import PlusOneStatus from "./plus-one-status";
 
 export default function View() {
   const countState = useCounts();
-  const { remainTime, initRemainTime } = useRemainTime();
-  const { trigger, isLoading } = usePlusOne({ onSuccess: initRemainTime });
+  const {
+    remainTime,
+    isLoading: isRemainTimeLoading,
+    initRemainTime,
+  } = useRemainTime();
+  const { trigger, isLoading: isPlusOneLoading } = usePlusOne({
+    onSuccess: initRemainTime,
+  });
 
   return (
     <>
       <PlusOneStatus {...countState} />
       <PlusBtn
-        isLoading={isLoading}
+        isLoading={isRemainTimeLoading || isPlusOneLoading}
         isError={Boolean(countState.error)}
-        canClick={remainTime?.canClick ?? true}
-        hoursLeft={remainTime?.hoursLeft ?? 0}
-        minutesLeft={remainTime?.minutesLeft ?? 0}
-        secondsLeft={remainTime?.secondsLeft ?? 0}
+        {...remainTime}
         onClick={trigger}
       />
     </>

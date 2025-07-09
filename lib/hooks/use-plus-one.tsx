@@ -24,8 +24,7 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
       });
       const verified = await verify.json();
       if (!verified.success) {
-        alert(verified.message || "로봇 의심됨. 다시 시도해 주세요.");
-        return;
+        return alert(verified.message || "로봇 의심됨. 다시 시도해 주세요.");
       }
 
       const res = await fetch("/api/click");

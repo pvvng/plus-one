@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const session = await getSession();
-
-  return NextResponse.json({ id: session.id || null });
+  const { id, clickedAt } = session;
+  return NextResponse.json(
+    {
+      success: true,
+      data: { id, clickedAt },
+    },
+    { status: 200 }
+  );
 }
