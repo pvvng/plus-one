@@ -44,7 +44,7 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
       return toast(
         <CustomToast success={data.success} message={data.message} />
       );
-    } catch (e) {
+    } catch {
       toast(
         <CustomToast
           success={false}
