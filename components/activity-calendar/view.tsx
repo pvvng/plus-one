@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { ActivityData } from "@/lib/generate-past-year-data";
+import { useActivityFilter } from "@/lib/hooks/use-activity-filter";
+import CustomToast from "../custom-toast";
+import CalendarBlockTooltip from "./block-tooltip";
+import DropdownSelector from "./dropdown-sort-selector";
 import {
   ActivityCalendar,
   Props as CalendarProps,
   ThemeInput,
 } from "react-activity-calendar";
-import { ActivityData } from "@/lib/generate-past-year-data";
-import { toast } from "sonner";
-import CustomToast from "../custom-toast";
-import CalendarBlockTooltip from "./block-tooltip";
 import { RectangleGroupIcon } from "@heroicons/react/24/solid";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 const theme: ThemeInput = {
   light: ["#f0f0f0", "#3B82F6"],
@@ -34,7 +36,9 @@ export default function ActivityCalendarView({
   activity: initialActivity,
   count,
 }: ActivityCalendarViewProps) {
-  const [activity, setActivity] = useState(initialActivity);
+  const { activity, selected, sortOptions, handleChange } = useActivityFilter({
+    initialActivity,
+  });
 
   useEffect(() => {
     if (!success) {
@@ -49,14 +53,21 @@ export default function ActivityCalendarView({
 
   return (
     <section
-      className="w-full max-w-screen-sm mx-auto sm:p-5 p-3 relative border rounded-lg
+      className="w-full max-w-screen-xl mx-auto sm:p-5 p-3 relative border rounded-lg
       border-neutral-50 dark:border-neutral-900 dark:bg-neutral-900 shadow"
     >
-      <p className="text-start font-medium flex items-center gap-1">
-        <RectangleGroupIcon className="size-4 text-blue-500 " />
-        <span>스트릭</span>
-      </p>
-      <div style={{ direction: "rtl" }} className="mt-3">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-start font-medium text-lg flex items-center gap-1">
+          <RectangleGroupIcon className="size-5 text-blue-500" />
+          <span>스트릭</span>
+        </p>
+        <DropdownSelector
+          options={sortOptions}
+          selected={selected}
+          onSelect={handleChange}
+        />
+      </div>
+      <div style={{ direction: "rtl" }} className="mt-5 flex justify-center">
         <ActivityCalendar
           data={activity}
           blockMargin={5}
