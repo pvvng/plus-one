@@ -1,4 +1,4 @@
-import UpdateForm from "@/components/update-form";
+import UpdateForm from "@/components/form/update-form";
 import { redirect } from "next/navigation";
 
 export default async function AddUpdatePage() {

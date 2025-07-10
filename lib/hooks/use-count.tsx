@@ -12,18 +12,22 @@ export function useCounts() {
 
   const fetchCounts = async () => {
     setIsLoading(true);
+
+    // 오늘 자정 (UTC 기준 2025-07-09T15:00:00.000Z 이후의 결과만 불러오기)
     const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-    const todayISO = startOfToday.toISOString();
+    startOfToday.setHours(0, 0, 0, 0); // 자정으로 기준시 설정
+    const todayISO = startOfToday.toISOString(); // 한국 자정 -> UTC로 변환
 
     const [
       { count: totalCount, error: fetchTotalError },
       { count: todayCount, error: fetchTodayError },
     ] = await Promise.all([
-      supabase.from("click_logs").select("*", { count: "exact", head: true }),
       supabase
         .from("click_logs")
-        .select("*", { count: "exact", head: true })
+        .select("clicked_at", { count: "exact", head: true }),
+      supabase
+        .from("click_logs")
+        .select("clicked_at", { count: "exact", head: true })
         .gte("clicked_at", todayISO),
     ]);
 

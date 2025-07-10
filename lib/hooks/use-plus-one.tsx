@@ -1,12 +1,14 @@
 "use client";
 
 import CustomToast from "@/components/custom-toast";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 
 export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const trigger = async () => {
@@ -35,10 +37,15 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
         );
       }
 
-      const res = await fetch("/api/click");
+      const res = await fetch("/api/click", {
+        method: "POST",
+      });
       const data = await res.json();
       if (data.success) {
         onSuccess();
+        startTransition(() => {
+          router.refresh(); // activity 데이터 강제 재호출
+        });
       }
 
       return toast(

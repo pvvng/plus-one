@@ -1,3 +1,4 @@
+import ActivityCalendarController from "@/components/activity-calendar/controller";
 import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";
@@ -5,8 +6,8 @@ import Image from "next/image";
 export default function Home() {
   return (
     <GoogleCaptcha>
-      <main className="w-full max-w-screen-sm mx-auto h-screen flex justify-center items-center p-5 font-paperlogy">
-        <section className="space-y-3 text-center">
+      <main className="font-paperlogy py-12 space-y-12">
+        <section className="w-full max-w-screen-sm mx-auto p-5 space-y-3 text-center">
           <div>
             <Image
               src="/plusone.webp"
@@ -22,6 +23,7 @@ export default function Home() {
           </div>
           <View />
         </section>
+        <ActivityCalendarController />
       </main>
     </GoogleCaptcha>
   );

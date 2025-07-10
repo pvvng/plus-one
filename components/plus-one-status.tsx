@@ -44,10 +44,12 @@ export default function PlusOneStatus({
         <span className="text-sm">개의 플러스원</span>
       </h2>
 
-      <p className="p-3 border border-neutral-200 dark:border-neutral-600 rounded">
-        <span className="text-neutral-500 text-sm">오늘은</span>{" "}
+      <p className="p-3 bg-neutral-50 rounded dark:bg-neutral-900">
+        <span className="text-neutral-500 dark:text-neutral-400 text-sm">
+          오늘은
+        </span>{" "}
         <AnimatedNumber value={today} className="font-bold" />
-        <span className="text-neutral-500 text-sm">
+        <span className="text-neutral-500 dark:text-neutral-400 text-sm">
           개의 플러스원이 추가됐어요.
         </span>
       </p>

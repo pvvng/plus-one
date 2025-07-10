@@ -1,4 +1,4 @@
-import ContactForm from "@/components/contact-form";
+import ContactForm from "@/components/form/contact-form";
 import Link from "next/link";
 
 export const metadata = {
@@ -17,7 +17,7 @@ export default function ContactPage() {
       >
         메인화면으로
       </Link>
-      <hr className="border border-neutral-200 border-dashed mb-4" />
+      <hr className="border border-neutral-200 dark:border-neutral-800 border-dashed mb-4" />
       <ContactForm />
     </main>
   );
