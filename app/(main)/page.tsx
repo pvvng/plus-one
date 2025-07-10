@@ -1,5 +1,4 @@
 import ActivityCalendarController from "@/components/activity-calendar/controller";
-import Loader from "@/components/loader";
 import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";
