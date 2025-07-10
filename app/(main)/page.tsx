@@ -1,4 +1,4 @@
-import ActivityCalendar from "@/components/activity-calendar";
+import ActivityCalendarController from "@/components/activity-calendar/controller";
 import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";
@@ -23,7 +23,7 @@ export default function Home() {
           </div>
           <View />
         </section>
-        <ActivityCalendar />
+        <ActivityCalendarController />
       </main>
     </GoogleCaptcha>
   );

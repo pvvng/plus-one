@@ -4,13 +4,14 @@ import { createNewUser } from "@/lib/create-new-user";
 import { buildAPIResponse } from "@/lib/build-response";
 import { getRemainTimeStatus } from "@/lib/get-remain-time-status";
 import { NextRequest } from "next/server";
+import { revalidateTag } from "next/cache";
 
 /**
  * 클릭 이벤트를 처리하는 API 엔드포인트
  * GET 요청: 클릭 이벤트 기록 및 플러스원 처리
  */
-export async function GET(req: NextRequest) {
-  if (req.method !== "GET") {
+export async function POST(req: NextRequest) {
+  if (req.method !== "POST") {
     return buildAPIResponse({
       success: false,
       message: "허용되지 않은 메서드입니다.",
@@ -29,6 +30,9 @@ export async function GET(req: NextRequest) {
     await supabase
       .from("click_logs")
       .insert([{ ip, clicked_at: now.toISOString() }]);
+
+    // 액티비티 데이터 revalidate
+    revalidateTag("activity");
 
     return buildAPIResponse({
       success: true,
@@ -49,7 +53,6 @@ export async function GET(req: NextRequest) {
   }
 
   const remainTimeStatus = getRemainTimeStatus(clickedAt);
-
   // 남은 시간 세션의 값을 바탕으로 에러 처리
   if (!remainTimeStatus.canClick) {
     const { hoursLeft, minutesLeft, secondsLeft } = remainTimeStatus;
@@ -64,7 +67,7 @@ export async function GET(req: NextRequest) {
   // 세션이 존재하는 경우엔 기존 클릭 확인
   const { data: existing, error: fetchError } = await supabase
     .from("clicks")
-    .select("*")
+    .select("clicked_at")
     .eq("id", sessionId)
     .maybeSingle();
 
@@ -104,6 +107,9 @@ export async function GET(req: NextRequest) {
   await supabase
     .from("click_logs")
     .insert([{ uuid: sessionId, ip, clicked_at: now.toISOString() }]);
+
+  // 액티비티 데이터 revalidate
+  revalidateTag("activity");
 
   return buildAPIResponse({
     success: true,

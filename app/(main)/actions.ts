@@ -1,31 +1,24 @@
+"use server";
+
 import { generatePastYearData } from "@/lib/generate-past-year-data";
 import { getKoreanDate } from "@/lib/get-korean-date";
-import { getSession } from "@/lib/session";
 import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 
-const INITIAL_DATA = {
-  activity: generatePastYearData(new Date().toISOString()),
-  count: 0,
-};
+async function _getActivity(sessionId?: string) {
+  const today = getKoreanDate();
+  const activityData = generatePastYearData(today); // 모든 날짜를 0으로 초기화
 
-export async function GET(req: NextRequest) {
-  if (req.method !== "GET") {
-    return NextResponse.json({
-      data: INITIAL_DATA,
-    });
-  }
+  const INITIAL_DATA = {
+    activity: [...activityData],
+    count: 0,
+  };
 
-  const session = await getSession();
-  const sessionId = session.id;
-
-  // 최초 접속하는 사용자는 세션 정보가 확인되지 않으므로 확실히 에러라고 볼 수 없다
   if (!sessionId) {
-    console.warn("세션 정보가 확인되지 않습니다.");
-    return NextResponse.json({
+    return {
       success: true,
       data: INITIAL_DATA,
-    });
+    };
   }
 
   const { data, error, count } = await supabase
@@ -35,15 +28,11 @@ export async function GET(req: NextRequest) {
 
   if (!data || error) {
     console.error("클릭 로그를 불러오는 중 에러가 발생했습니다: ", error);
-    return NextResponse.json({
+    return {
       success: false,
       data: INITIAL_DATA,
-    });
+    };
   }
-
-  // 현재 날짜를 한국시로 변경
-  const today = getKoreanDate();
-  const activityData = generatePastYearData(today); // 모든 날짜를 0으로 초기화
 
   // clicked_at 날짜 문자열들을 "YYYY-MM-DD" 형태로 변환
   const clickedDates = new Set(
@@ -55,11 +44,21 @@ export async function GET(req: NextRequest) {
     clickedDates.has(entry.date) ? { ...entry, count: 1, level: 1 } : entry
   );
 
-  return NextResponse.json({
+  return {
     success: true,
     data: {
       activity: updated,
-      count,
+      count: count ?? 0,
     },
-  });
+  };
 }
+
+/** activity 스트릭 데이터 호출 + 캐시 함수 */
+export const getActivity = unstable_cache(
+  _getActivity,
+  ["activity_cache_key"],
+  {
+    revalidate: (60 * 60 * 24) / 2, // 반나절
+    tags: ["activity"],
+  }
+);
