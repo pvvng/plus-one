@@ -13,7 +13,7 @@ export default async function UpdatePage() {
   const updates = await getUpdates();
 
   return (
-    <main className="max-w-screen-sm h-screen overflow-scroll mx-auto py-12 px-5 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy">
+    <main className="max-w-screen-sm min-h-screen mx-auto py-12 px-5 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy">
       <h1 className="text-2xl font-bold mb-4">업데이트 내역</h1>
       <Link
         href="/"
