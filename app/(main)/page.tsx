@@ -4,6 +4,7 @@ import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";
 import { Suspense } from "react";
+import { CalendarLoading } from "./loading";
 
 export default function Home() {
   return (
@@ -25,13 +26,7 @@ export default function Home() {
           </div>
           <View />
         </section>
-        <Suspense
-          fallback={
-            <div className="py-12">
-              <Loader />
-            </div>
-          }
-        >
+        <Suspense fallback={<CalendarLoading />}>
           <ActivityCalendarController />
         </Suspense>
       </main>
