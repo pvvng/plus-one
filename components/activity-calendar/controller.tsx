@@ -6,9 +6,5 @@ export default async function ActivityCalendarController() {
   const session = await getSession();
   const { success, data } = await getActivity(session.id);
 
-  return (
-    <div className="p-5">
-      <ActivityCalendarView success={success} {...data} />
-    </div>
-  );
+  return <ActivityCalendarView success={success} {...data} />;
 }

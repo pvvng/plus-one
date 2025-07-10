@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityCalendar,
   Props as CalendarProps,
@@ -12,7 +12,7 @@ import CustomToast from "../custom-toast";
 import CalendarBlockTooltip from "./block-tooltip";
 import { RectangleGroupIcon } from "@heroicons/react/24/solid";
 
-const explicitTheme: ThemeInput = {
+const theme: ThemeInput = {
   light: ["#f0f0f0", "#3B82F6"],
   dark: ["#262626", "#3B82F6"],
 };
@@ -31,9 +31,11 @@ interface ActivityCalendarViewProps {
 
 export default function ActivityCalendarView({
   success,
-  activity,
+  activity: initialActivity,
   count,
 }: ActivityCalendarViewProps) {
+  const [activity, setActivity] = useState(initialActivity);
+
   useEffect(() => {
     if (!success) {
       toast(
@@ -62,11 +64,11 @@ export default function ActivityCalendarView({
           blockSize={20}
           maxLevel={1}
           hideColorLegend
-          labels={labels}
           totalCount={count}
           fontSize={14}
           weekStart={1}
-          theme={explicitTheme}
+          labels={labels}
+          theme={theme}
           renderBlock={(block, activity) => (
             <CalendarBlockTooltip activity={activity}>
               {block}
