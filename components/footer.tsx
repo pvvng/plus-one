@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 const infoLinks = [
@@ -15,51 +14,36 @@ const faqLinks = [
 export default function Footer() {
   return (
     <footer className="w-full p-5 bg-neutral-50 dark:bg-neutral-900 font-paperlogy space-y-5">
-      <section className="flex gap-10">
-        <Link href="/">
-          <div className="text-center">
-            <Image
-              src="/plusone.webp"
-              alt="플러스원! 로고"
-              width={50}
-              height={50}
-              priority
-              className="mx-auto"
-            />
-            <p className="font-semibold text-lg">플러스원!</p>
-          </div>
-        </Link>
-        <div className="grid grid-cols-3 gap-3">
-          <div>
-            <p className="font-semibold text-lg">정보</p>
-            <ul className="flex flex-col gap-1 mt-2">
-              {infoLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold text-lg">문의</p>
-            <ul className="flex flex-col gap-1 mt-2">
-              {faqLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <section className="max-w-screen-xl mx-auto flex gap-5">
+        <div>
+          <p className="font-semibold text-lg">정보</p>
+          <ul className="flex flex-col gap-1 mt-2">
+            {infoLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="font-semibold text-lg">문의</p>
+          <ul className="flex flex-col gap-1 mt-2">
+            {faqLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
       <section className="mt-4 space-y-2 sm:text-end">

@@ -2,12 +2,14 @@ import ActivityCalendarController from "@/components/activity-calendar/controlle
 import GoogleCaptcha from "@/components/recaptcha-wrapper";
 import View from "@/components/view";
 import Image from "next/image";
+import { Suspense } from "react";
+import { CalendarLoading } from "./loading";
 
 export default function Home() {
   return (
     <GoogleCaptcha>
       <main className="font-paperlogy py-12 space-y-12">
-        <section className="w-full max-w-screen-sm mx-auto p-5 space-y-3 text-center">
+        <section className="w-full max-w-screen-xl mx-auto p-5 space-y-3 text-center">
           <div>
             <Image
               src="/plusone.webp"
@@ -23,7 +25,9 @@ export default function Home() {
           </div>
           <View />
         </section>
-        <ActivityCalendarController />
+        <Suspense fallback={<CalendarLoading />}>
+          <ActivityCalendarController />
+        </Suspense>
       </main>
     </GoogleCaptcha>
   );

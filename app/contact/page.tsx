@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="max-w-screen-sm mx-auto py-12 px-5 text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy">
+    <main className="max-w-screen-xl mx-auto py-12 px-5 text-neutral-800 dark:text-neutral-200 leading-relaxed font-paperlogy">
       <h1 className="text-2xl font-bold mb-4">문의하기</h1>
       <Link
         href="/"

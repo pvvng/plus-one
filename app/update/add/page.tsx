@@ -7,7 +7,7 @@ export default async function AddUpdatePage() {
   if (!isDev) return redirect("/");
 
   return (
-    <main className="max-w-screen-sm min-h-screen mx-auto py-12 px-5 font-paperlogy">
+    <main className="max-w-screen-xl min-h-screen mx-auto py-12 px-5 font-paperlogy">
       <h1 className="text-xl font-semibold mb-4">업데이트 추가</h1>
       <UpdateForm />
     </main>
