@@ -14,74 +14,72 @@ const faqLinks = [
 export default function Footer() {
   return (
     <footer className="w-full p-5 bg-neutral-50 dark:bg-neutral-900 font-paperlogy space-y-5">
-      <div className="max-w-screen-sm mx-auto">
-        <section className="grid grid-cols-3 gap-3">
-          <div>
-            <p className="font-semibold text-lg">정보</p>
-            <ul className="flex flex-col gap-1 mt-2">
-              {infoLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold text-lg">문의</p>
-            <ul className="flex flex-col gap-1 mt-2">
-              {faqLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-        <section className="mt-4 space-y-2 sm:text-end">
-          <p className="text-xs text-neutral-400">
-            © 2025{" "}
-            <Link
-              href="https://github.com/pvvng"
-              target="_blank"
-              className="text-blue-500 hover:text-blue-600 underline"
-            >
-              pvvng
-            </Link>
-            . 모든 권리 보유.
-          </p>
-          <p className="text-xs text-neutral-400">
-            이 사이트는 reCAPTCHA의 보호를 받으며, Google{" "}
-            <Link
-              href="https://policies.google.com/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-blue-500 hover:text-blue-600"
-            >
-              개인정보처리방침
-            </Link>{" "}
-            및{" "}
-            <Link
-              href="https://policies.google.com/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-blue-500 hover:text-blue-600"
-            >
-              서비스 약관
-            </Link>
-            이 적용됩니다.
-          </p>
-        </section>
-      </div>
+      <section className="max-w-screen-xl mx-auto flex gap-5">
+        <div>
+          <p className="font-semibold text-lg">정보</p>
+          <ul className="flex flex-col gap-1 mt-2">
+            {infoLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="font-semibold text-lg">문의</p>
+          <ul className="flex flex-col gap-1 mt-2">
+            {faqLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-neutral-700 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+      <section className="mt-4 space-y-2 sm:text-end">
+        <p className="text-xs text-neutral-400">
+          © 2025{" "}
+          <Link
+            href="https://github.com/pvvng"
+            target="_blank"
+            className="text-blue-500 hover:text-blue-600 underline"
+          >
+            pvvng
+          </Link>
+          . 모든 권리 보유.
+        </p>
+        <p className="text-xs text-neutral-400">
+          이 사이트는 reCAPTCHA의 보호를 받으며, Google{" "}
+          <Link
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-blue-500 hover:text-blue-600"
+          >
+            개인정보처리방침
+          </Link>{" "}
+          및{" "}
+          <Link
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-blue-500 hover:text-blue-600"
+          >
+            서비스 약관
+          </Link>
+          이 적용됩니다.
+        </p>
+      </section>
     </footer>
   );
 }

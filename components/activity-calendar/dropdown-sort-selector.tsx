@@ -1,6 +1,6 @@
 "use client";
 
-import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
@@ -87,7 +87,7 @@ export default function DropdownSelector({
         className="px-3 py-1 rounded border bg-white text-neutral-800 border-neutral-300 flex gap-1 items-center
         dark:bg-neutral-800 dark:text-white dark:border-neutral-700 cursor-pointer"
       >
-        <AdjustmentsHorizontalIcon className="size-3" /> {selected.label}
+        <FunnelIcon className="size-3" /> {selected.label}
       </button>
 
       {/* 드롭다운 */}
