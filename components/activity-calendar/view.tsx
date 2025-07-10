@@ -10,7 +10,7 @@ import { ActivityData } from "@/lib/generate-past-year-data";
 import { toast } from "sonner";
 import CustomToast from "../custom-toast";
 import CalendarBlockTooltip from "./block-tooltip";
-import { ChartBarIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
+import { RectangleGroupIcon } from "@heroicons/react/24/solid";
 
 const explicitTheme: ThemeInput = {
   light: ["#f0f0f0", "#3B82F6"],

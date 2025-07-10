@@ -31,6 +31,11 @@ export default function Textarea({
         focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
         {...rest}
       />
+      {errors.map((error) => (
+        <p key={error} className="text-sm text-red-600">
+          {error}
+        </p>
+      ))}
     </div>
   );
 }
