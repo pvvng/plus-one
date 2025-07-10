@@ -47,7 +47,7 @@ export default function ActivityCalendarView({
 
   return (
     <section
-      className="w-full max-w-screen-sm mx-auto p-5 relative border rounded-2xl
+      className="w-full max-w-screen-sm mx-auto p-5 relative border rounded-lg
       border-neutral-50 dark:border-neutral-900 dark:bg-neutral-900 shadow"
     >
       <p className="text-start font-medium flex items-center gap-1">

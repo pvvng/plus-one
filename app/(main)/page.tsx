@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <GoogleCaptcha>
-      <main className="py-12 font-paperlogy">
+      <main className="font-paperlogy py-12 space-y-12">
         <section className="w-full max-w-screen-sm mx-auto p-5 space-y-3 text-center">
           <div>
             <Image

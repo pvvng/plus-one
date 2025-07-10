@@ -29,7 +29,7 @@ export default async function UpdatePage() {
           업데이트 추가
         </Link>
       )}
-      <hr className="border border-neutral-200 border-dashed" />
+      <hr className="border border-neutral-200 dark:border-neutral-800 border-dashed" />
       <section className="py-5">
         {updates.map(({ id, title, payload, created_at }) => (
           <article
