@@ -1,6 +1,6 @@
-import { supabase } from "./supabase";
-import { getSession } from "./session";
-import { buildAPIResponse } from "./build-response";
+import { supabase } from "../supabase";
+import { getSession } from "../session";
+import { buildAPIResponse } from "../build-response";
 import { NextResponse } from "next/server";
 
 interface CreateNewUserProps {
