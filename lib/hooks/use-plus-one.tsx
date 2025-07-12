@@ -21,6 +21,7 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
     setIsLoading(true);
 
     try {
+      // reCaptcha를 이용해 봇 검증
       const token = await executeRecaptcha("plus_one");
       const verify = await fetch("/api/recaptcha-verify", {
         method: "POST",
@@ -37,6 +38,7 @@ export function usePlusOne({ onSuccess }: { onSuccess: () => void }) {
         );
       }
 
+      // plus one
       const res = await fetch("/api/click", {
         method: "POST",
       });

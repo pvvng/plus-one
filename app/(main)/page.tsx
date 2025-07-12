@@ -13,8 +13,6 @@ export default async function Home() {
     error,
   } = await supabase.auth.getUser();
 
-  console.log(user);
-
   return (
     <GoogleCaptcha>
       <main className="font-paperlogy py-12 space-y-12">

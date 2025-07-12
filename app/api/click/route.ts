@@ -19,6 +19,12 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // TODO:
+  // 1. 회원/비회원 구분하기
+  // 2. 클릭로그 남기기. 회원은 uuid를 회원 아이디로, 비회원은 null로
+  // 3. click prevent 쿠키 발급
+  // 추가) 가능하다면 중복 클릭을 막기위해 Too Many Request 에러처리 -> 아마 Redis 필요할듯..?
+
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
   const now = new Date();
@@ -26,7 +32,7 @@ export async function POST(req: NextRequest) {
 
   // 로컬에서 테스트할 경우 무조건 통과
   if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
-    // 유저 생성없이 로그만 추가
+    // 유저 연동없이 로그만 추가
     await supabase
       .from("click_logs")
       .insert([{ ip, clicked_at: now.toISOString() }]);

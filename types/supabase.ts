@@ -67,20 +67,29 @@ export type Database = {
       users: {
         Row: {
           created_at: string
+          email: string
           id: string
           last_clicked_at: string | null
+          name: string
+          provider: string
           streak: number
         }
         Insert: {
           created_at?: string
+          email: string
           id?: string
           last_clicked_at?: string | null
+          name: string
+          provider: string
           streak?: number
         }
         Update: {
           created_at?: string
+          email?: string
           id?: string
           last_clicked_at?: string | null
+          name?: string
+          provider?: string
           streak?: number
         }
         Relationships: []
