@@ -31,7 +31,9 @@ export async function validateLogSession(): Promise<ValidateLogSessionResult> {
     return { status: "INVALID_SESSION" };
   }
 
-  const isValidSession = clickLog.clicked_at === clickedAt;
+  const isValidSession =
+    new Date(clickLog.clicked_at).getTime() === new Date(clickedAt).getTime();
+
   if (!isValidSession) {
     await session.destroy();
     return { status: "INVALID_SESSION" };
