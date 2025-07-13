@@ -1,9 +1,9 @@
 "use client";
 
-import { authLogin } from "@/lib/auth-login";
 import Image from "next/image";
 import { toast } from "sonner";
 import CustomToast from "./custom-toast";
+import { authLogin } from "@/lib/supabase/actions/auth-login";
 
 export default function LoginButtons() {
   const kakaoLogin = async () => {

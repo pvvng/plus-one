@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "../supabase/client";
 
 /** plus one count realtime subscribe hook */
 export function useCounts() {
@@ -9,8 +9,11 @@ export function useCounts() {
   const [total, setTotal] = useState(0);
   const [today, setToday] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
 
   const fetchCounts = async () => {
+    if (!supabase) return;
+
     setIsLoading(true);
 
     // 오늘 자정 (UTC 기준 2025-07-09T15:00:00.000Z 이후의 결과만 불러오기)
@@ -60,7 +63,7 @@ export function useCounts() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [supabase]);
 
   return { total, today, isLoading, error };
 }

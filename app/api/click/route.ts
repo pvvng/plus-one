@@ -1,9 +1,9 @@
-import { buildAPIResponse } from "@/lib/build-response";
+import { buildAPIResponse } from "@/util/build-response";
 import { NextRequest } from "next/server";
-import { createLog } from "@/lib/supabase/create-log";
 import { createClient } from "@/lib/supabase/server";
-import { updateSession } from "@/lib/update-session";
-import { validateLogSession } from "@/lib/validate-log-session";
+import { updateSession } from "@/lib/session/update";
+import { validateLogSession } from "@/lib/supabase/actions/validate-log-session";
+import { createLog } from "@/lib/supabase/actions/create-log";
 
 /**
  * 클릭 이벤트를 처리하는 API 엔드포인트

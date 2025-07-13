@@ -1,6 +1,6 @@
-import { getRemainTimeStatus } from "./get-remain-time-status";
-import { getSession } from "./session";
-import { createClient } from "./supabase/server";
+import { getRemainTimeStatus } from "@/util/time/get-remain-time-status";
+import { createClient } from "../server";
+import { getSession } from "@/lib/session/get";
 
 type ValidateLogSessionResult =
   | { status: "NO_SESSION" }

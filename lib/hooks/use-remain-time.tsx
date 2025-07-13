@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { getRemainTimeStatus } from "../get-remain-time-status";
+import { getRemainTimeStatus } from "../../util/time/get-remain-time-status";
 
 export interface RemainTime {
   hoursLeft: number;
@@ -47,7 +47,6 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
         const session: SessionData = json.data;
 
         if (!session.clickedAt) return initRemainTime(true);
-
         const remainStatus = getRemainTimeStatus(session.clickedAt);
         setRemainTime({
           ...remainStatus,

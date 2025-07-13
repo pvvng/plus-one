@@ -1,6 +1,6 @@
 "use client";
 
-import { ActivityData } from "@/lib/generate-past-year-data";
+import { ActivityData } from "@/util/time/generate-past-year-data";
 import { useActivityFilter } from "@/lib/hooks/use-activity-filter";
 import CustomToast from "../custom-toast";
 import CalendarBlockTooltip from "./block-tooltip";

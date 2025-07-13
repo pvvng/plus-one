@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/session";
+import { getSession } from "@/lib/session/get";
 import { getActivity } from "@/app/(main)/actions";
 import ActivityCalendarView from "./view";
 

@@ -2,8 +2,8 @@ import { useState } from "react";
 import {
   ActivityData,
   generatePastYearData,
-} from "@/lib/generate-past-year-data";
-import { getKoreanDate } from "@/lib/get-korean-date";
+} from "@/util/time/generate-past-year-data";
+import { getKoreanDate } from "@/util/time/get-korean-date";
 
 interface SortOption {
   label: string;

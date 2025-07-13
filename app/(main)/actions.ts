@@ -1,11 +1,18 @@
 "use server";
 
-import { generatePastYearData } from "@/lib/generate-past-year-data";
-import { getKoreanDate } from "@/lib/get-korean-date";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
+import { generatePastYearData } from "@/util/time/generate-past-year-data";
+import { getKoreanDate } from "@/util/time/get-korean-date";
 import { unstable_cache } from "next/cache";
+import { cookies } from "next/headers";
 
-async function _getActivity(sessionId?: string) {
+async function _getActivity({
+  sessionId,
+  cookieStore,
+}: {
+  sessionId?: string;
+  cookieStore: ReturnType<typeof cookies>;
+}) {
   const today = getKoreanDate();
   const activityData = generatePastYearData(today); // 모든 날짜를 0으로 초기화
 
@@ -21,6 +28,7 @@ async function _getActivity(sessionId?: string) {
     };
   }
 
+  const supabase = await createClient(cookieStore);
   const { data, error, count } = await supabase
     .from("click_logs")
     .select("clicked_at", { count: "exact" })
@@ -54,11 +62,15 @@ async function _getActivity(sessionId?: string) {
 }
 
 /** activity 스트릭 데이터 호출 + 캐시 함수 */
-export const getActivity = unstable_cache(
-  _getActivity,
-  ["activity_cache_key"],
-  {
-    revalidate: (60 * 60 * 24) / 2, // 반나절
-    tags: ["activity"],
-  }
-);
+export async function getActivity(sessionId: string | undefined) {
+  const cookieStore = cookies();
+
+  return unstable_cache(
+    () => _getActivity({ sessionId, cookieStore }),
+    ["activity_cache_key"],
+    {
+      revalidate: (60 * 60 * 24) / 2, // 반나절
+      tags: ["activity"],
+    }
+  )();
+}
