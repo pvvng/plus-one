@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "../supabase/client";
 
 /** plus one count realtime subscribe hook */
@@ -11,15 +11,14 @@ export function useCounts() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
-  const fetchCounts = async () => {
+  const fetchCounts = useCallback(async () => {
     if (!supabase) return;
 
     setIsLoading(true);
 
-    // 오늘 자정 (UTC 기준 2025-07-09T15:00:00.000Z 이후의 결과만 불러오기)
     const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0); // 자정으로 기준시 설정
-    const todayISO = startOfToday.toISOString(); // 한국 자정 -> UTC로 변환
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayISO = startOfToday.toISOString();
 
     const [
       { count: totalCount, error: fetchTotalError },
@@ -38,13 +37,14 @@ export function useCounts() {
       setError(
         "데이터를 불러오는 중 오류가 발생했습니다. 새로고침 후 다시 시도해주세요."
       );
-      return setIsLoading(false);
+      setIsLoading(false);
+      return;
     }
 
     setTotal(totalCount ?? 0);
     setToday(todayCount ?? 0);
     setIsLoading(false);
-  };
+  }, [supabase]);
 
   useEffect(() => {
     fetchCounts();

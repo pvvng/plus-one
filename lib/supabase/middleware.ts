@@ -13,8 +13,12 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options: _ }) =>
-            request.cookies.set(name, value)
+          cookiesToSet.forEach(
+            ({
+              name,
+              value,
+              // options
+            }) => request.cookies.set(name, value)
           );
           // 새로운 응답 객체 만들 때는 request 포함해야 함
           supabaseResponse = NextResponse.next({ request });

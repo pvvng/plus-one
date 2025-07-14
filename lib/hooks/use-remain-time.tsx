@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { getRemainTimeStatus } from "../../util/time/get-remain-time-status";
 
 export interface RemainTime {
@@ -29,14 +29,17 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
   const lastUpdateRef = useRef(performance.now());
   const rafIdRef = useRef<number>(null);
 
-  const initRemainTime = (_canClick = false) => {
-    setRemainTime({
-      hoursLeft: 24,
-      minutesLeft: 0,
-      secondsLeft: 0,
-      canClick: devMode ? true : _canClick,
-    });
-  };
+  const initRemainTime = useCallback(
+    (_canClick = false) => {
+      setRemainTime({
+        hoursLeft: 24,
+        minutesLeft: 0,
+        secondsLeft: 0,
+        canClick: devMode ? true : _canClick,
+      });
+    },
+    [devMode]
+  );
 
   useEffect(() => {
     const fetchRemainTime = async () => {
