@@ -34,7 +34,6 @@ async function _getActivity({
     .select("clicked_at", { count: "exact" })
     .eq("uuid", userId);
 
-  console.log(data, error, count);
   if (!data || error) {
     console.error("클릭 로그를 불러오는 중 에러가 발생했습니다: ", error);
     return {

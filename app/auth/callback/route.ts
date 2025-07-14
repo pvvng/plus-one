@@ -1,3 +1,7 @@
+import {
+  SessionLinkStatus,
+  syncAnonymousSessionWithUser,
+} from "@/lib/supabase/actions/sync-anonymous-session-with-user";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -70,8 +74,12 @@ export async function GET(req: NextRequest) {
     .eq("id", uuid)
     .maybeSingle();
 
-  // 이미 존재하는 사용자라면 정상 리디렉트
+  // 이미 존재하는 사용자라면 세션 업데이트 후 정상 리디렉트
   if (existing) {
+    const result = await syncAnonymousSessionWithUser({ uuid });
+    if (result.status === SessionLinkStatus.DB_ERROR) {
+      return redirectToAuthError(origin);
+    }
     return redirectUser(req, origin, next);
   }
 
@@ -88,8 +96,8 @@ export async function GET(req: NextRequest) {
     userMetadata.full_name ??
     userMetadata.user_name ??
     `사용자_${Date.now()}`;
-  const email: string = user.email ?? userMetadata.emai ?? "";
-  const provider = user.app_metadata.provider || "unknown";
+  const email: string = user.email ?? userMetadata.email ?? "unknown-email";
+  const provider = user.app_metadata.provider || "unknown-provider";
 
   // 새 사용자 추가
   const { error: insertNewUserError } = await supabase.from("users").insert({
@@ -102,6 +110,12 @@ export async function GET(req: NextRequest) {
   // 사용자 추가 에러처리
   if (insertNewUserError) {
     console.error("새로운 사용자 추가 실패:", insertNewUserError);
+    return redirectToAuthError(origin);
+  }
+
+  const result = await syncAnonymousSessionWithUser({ uuid });
+
+  if (result.status === SessionLinkStatus.DB_ERROR) {
     return redirectToAuthError(origin);
   }
 

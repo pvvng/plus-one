@@ -20,41 +20,31 @@ export async function POST(req: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   // 로컬에서 테스트할 경우 무조건 통과
-  if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
-    // 유저 연동없이 로그만 추가
-    const logId = await createLog({ ip, now });
+  // if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
+  //   // 유저 연동없이 로그만 추가
+  //   const logId = await createLog({ ip, now });
 
-    if (!logId) {
-      return buildAPIResponse({
-        success: false,
-        message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
-        status: 500,
-      });
-    }
+  //   if (!logId) {
+  //     return buildAPIResponse({
+  //       success: false,
+  //       message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
+  //       status: 500,
+  //     });
+  //   }
 
-    revalidateTag("activity");
+  //   revalidateTag("activity");
 
-    return buildAPIResponse({
-      success: true,
-      message: "플러스원 성공! (로컬 테스트)",
-      status: 200,
-    });
-  }
+  //   return buildAPIResponse({
+  //     success: true,
+  //     message: "플러스원 성공! (로컬 테스트)",
+  //     status: 200,
+  //   });
+  // }
 
   const supabase = await createClient();
   const {
     data: { user },
-    error: getUserError,
   } = await supabase.auth.getUser();
-
-  if (getUserError) {
-    console.error("Supabase 인증 실패:", getUserError);
-    return buildAPIResponse({
-      success: false,
-      message: "사용자 인증에 실패했습니다.",
-      status: 401,
-    });
-  }
 
   const uuid = user?.id;
 
