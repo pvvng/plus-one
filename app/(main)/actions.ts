@@ -7,10 +7,10 @@ import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 
 async function _getActivity({
-  sessionId,
+  userId,
   cookieStore,
 }: {
-  sessionId?: string;
+  userId?: string;
   cookieStore: ReturnType<typeof cookies>;
 }) {
   const today = getKoreanDate();
@@ -21,7 +21,7 @@ async function _getActivity({
     count: 0,
   };
 
-  if (!sessionId) {
+  if (!userId) {
     return {
       success: true,
       data: INITIAL_DATA,
@@ -32,8 +32,9 @@ async function _getActivity({
   const { data, error, count } = await supabase
     .from("click_logs")
     .select("clicked_at", { count: "exact" })
-    .eq("uuid", sessionId);
+    .eq("uuid", userId);
 
+  console.log(data, error, count);
   if (!data || error) {
     console.error("클릭 로그를 불러오는 중 에러가 발생했습니다: ", error);
     return {
@@ -62,11 +63,11 @@ async function _getActivity({
 }
 
 /** activity 스트릭 데이터 호출 + 캐시 함수 */
-export async function getActivity(sessionId: string | undefined) {
+export async function getActivity(userId: string | undefined) {
   const cookieStore = cookies();
 
   return unstable_cache(
-    () => _getActivity({ sessionId, cookieStore }),
+    () => _getActivity({ userId, cookieStore }),
     ["activity_cache_key"],
     {
       revalidate: (60 * 60 * 24) / 2, // 반나절

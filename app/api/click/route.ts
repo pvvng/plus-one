@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { updateSession } from "@/lib/session/update";
 import { validateLogSession } from "@/lib/supabase/actions/validate-log-session";
 import { createLog } from "@/lib/supabase/actions/create-log";
+import { revalidateTag } from "next/cache";
 
 /**
  * 클릭 이벤트를 처리하는 API 엔드포인트
@@ -16,24 +17,26 @@ export async function POST(req: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   // 로컬에서 테스트할 경우 무조건 통과
-  // if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
-  //   // 유저 연동없이 로그만 추가
-  //   const logId = await createLog({ ip, now });
+  if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
+    // 유저 연동없이 로그만 추가
+    const logId = await createLog({ ip, now });
 
-  //   if (!logId) {
-  //     return buildAPIResponse({
-  //       success: false,
-  //       message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
-  //       status: 500,
-  //     });
-  //   }
+    if (!logId) {
+      return buildAPIResponse({
+        success: false,
+        message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
+        status: 500,
+      });
+    }
 
-  //   return buildAPIResponse({
-  //     success: true,
-  //     message: "플러스원 성공! (로컬 테스트)",
-  //     status: 200,
-  //   });
-  // }
+    revalidateTag("activity");
+
+    return buildAPIResponse({
+      success: true,
+      message: "플러스원 성공! (로컬 테스트)",
+      status: 200,
+    });
+  }
 
   const supabase = await createClient();
   const {
@@ -79,6 +82,8 @@ export async function POST(req: NextRequest) {
   }
   // 세션 업데이트
   await updateSession({ logId, now });
+
+  revalidateTag("activity");
 
   return buildAPIResponse({
     success: true,
