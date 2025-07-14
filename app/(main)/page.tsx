@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { CalendarLoading } from "./loading";
 
-export default function Home() {
+export default async function Home() {
   return (
     <GoogleCaptcha>
       <main className="font-paperlogy py-12 space-y-12">

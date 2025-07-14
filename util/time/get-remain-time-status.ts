@@ -1,5 +1,5 @@
 import { ONE_DAY_MS } from "@/constant";
-import { getTimeLeftUntil24Hours } from "./get-time-left";
+import { getTimeLeftUntil24Hours } from "@/util/time/get-time-left";
 
 export function getRemainTimeStatus(clickAt: string) {
   const now = new Date();

@@ -1,37 +1,43 @@
-import { getSession } from "@/lib/session";
-import { supabase } from "@/lib/supabase";
-import { createNewUser } from "@/lib/create-new-user";
-import { buildAPIResponse } from "@/lib/build-response";
-import { getRemainTimeStatus } from "@/lib/get-remain-time-status";
+import { buildAPIResponse } from "@/util/build-response";
 import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { updateSession } from "@/lib/session/update";
+import {
+  LogSessionStatus,
+  validateLogSession,
+} from "@/lib/supabase/actions/validate-log-session";
+import { createLog, CreateLogStatus } from "@/lib/supabase/actions/create-log";
 import { revalidateTag } from "next/cache";
+import { getSession } from "@/lib/session/get";
 
 /**
  * 클릭 이벤트를 처리하는 API 엔드포인트
  * GET 요청: 클릭 이벤트 기록 및 플러스원 처리
  */
 export async function POST(req: NextRequest) {
-  if (req.method !== "POST") {
-    return buildAPIResponse({
-      success: false,
-      message: "허용되지 않은 메서드입니다.",
-      status: 405,
-    });
-  }
-
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
-  const now = new Date();
+  const now = new Date().toISOString();
   const isDev = process.env.NODE_ENV === "development";
 
   // 로컬에서 테스트할 경우 무조건 통과
   if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
-    // 유저 생성없이 로그만 추가
-    await supabase
-      .from("click_logs")
-      .insert([{ ip, clicked_at: now.toISOString() }]);
+    // 유저 연동없이 로그만 추가
+    const createLogResult = await createLog({ ip, now });
+    if (createLogResult.status === CreateLogStatus.DB_ERROR) {
+      console.error("로그 생성 실패: ", createLogResult.error);
 
-    // 액티비티 데이터 revalidate
+      return buildAPIResponse({
+        success: false,
+        message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
+        status: 500,
+      });
+    }
+
+    // 세션 업데이트
+    const logId = createLogResult.logId;
+    await updateSession({ logId, now });
+
     revalidateTag("activity");
 
     return buildAPIResponse({
@@ -41,21 +47,24 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const session = await getSession();
-  const { id: sessionId, clickedAt } = session;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // 제대로 된 세션이 아닐 경우
-  if (!sessionId || !clickedAt) {
-    // 세션이 불완전하므로 파기
-    await session.destroy();
-    // 새 유저 생성
-    return await createNewUser({ ip, now });
-  }
+  const uuid = user?.id;
 
-  const remainTimeStatus = getRemainTimeStatus(clickedAt);
-  // 남은 시간 세션의 값을 바탕으로 에러 처리
-  if (!remainTimeStatus.canClick) {
-    const { hoursLeft, minutesLeft, secondsLeft } = remainTimeStatus;
+  // 세션 검증
+  const validateLogSessionResult = await validateLogSession();
+
+  // 유효하지만 유효기간이 남은 세션
+  if (validateLogSessionResult.status === LogSessionStatus.TOO_EARLY) {
+    const { hoursLeft, minutesLeft, secondsLeft } =
+      validateLogSessionResult.remainTimeStatus;
+
+    console.warn(
+      `[플러스원 차단] uuid: ${uuid}, ip: ${ip}, 남은 시간: ${hoursLeft}시간 ${minutesLeft}분 ${secondsLeft}초`
+    );
 
     return buildAPIResponse({
       success: false,
@@ -63,52 +72,31 @@ export async function POST(req: NextRequest) {
       status: 429,
     });
   }
+  // 유효하지 않은 세션 혹은 유효한 세션이지만 만료 기간이 지났음에도 삭제되지 않은 세션
+  if (
+    validateLogSessionResult.status === LogSessionStatus.INVALID_SESSION ||
+    validateLogSessionResult.status === LogSessionStatus.VALID
+  ) {
+    const session = await getSession();
+    await session.destroy; // 세션 파괴
+  }
 
-  // 세션이 존재하는 경우엔 기존 클릭 확인
-  const { data: existing, error: fetchError } = await supabase
-    .from("clicks")
-    .select("clicked_at")
-    .eq("id", sessionId)
-    .maybeSingle();
-
-  if (fetchError) {
-    console.error("클릭 기록 조회 중 오류 발생:", fetchError);
+  // 클릭 로그 작성
+  const createLogResult = await createLog({ uuid, ip, now });
+  if (createLogResult.status === CreateLogStatus.DB_ERROR) {
+    console.error("로그 생성 실패: ", createLogResult.error);
 
     return buildAPIResponse({
       success: false,
-      message: "플러스원 기록 조회 중 오류가 발생했습니다.",
+      message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
       status: 500,
     });
   }
+  const logId = createLogResult.logId;
+  // 세션 업데이트
+  await updateSession({ logId, now });
 
-  // 세션은 존재하는데 클릭 기록이 없는 경우 -> 신규 사용자로 추가
-  if (!existing) {
-    console.warn(
-      `세션 ID(${sessionId})에 대한 클릭 기록이 없습니다. 새 사용자로 처리합니다.`
-    );
-
-    await session.destroy();
-    return await createNewUser({ ip, now });
-  }
-
-  // db clicked_at과 세션의 clicketAt 둘이 값이 다른 상황 -> 신규 사용자로 추가
-  if (existing.clicked_at !== clickedAt) {
-    await session.destroy();
-    return await createNewUser({ ip, now });
-  }
-
-  // 기존 사용자 & 24시간 경과 -> 업데이트
-  await supabase
-    .from("clicks")
-    .update({ ip, clicked_at: now.toISOString() })
-    .eq("id", sessionId);
-
-  // 클릭 로그 작성
-  await supabase
-    .from("click_logs")
-    .insert([{ uuid: sessionId, ip, clicked_at: now.toISOString() }]);
-
-  // 액티비티 데이터 revalidate
+  // 스트릭 데이터 revalidate
   revalidateTag("activity");
 
   return buildAPIResponse({

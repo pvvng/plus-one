@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "gen-types": "npx supabase gen types typescript --project-id pepxiptxqdrrwqkeekwu --schema public > types/supabase.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.3",
     "gsap": "^3.13.0",
     "iron-session": "^8.0.4",
@@ -32,6 +34,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
+    "supabase": "^2.30.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

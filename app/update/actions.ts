@@ -1,7 +1,8 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { revalidateTag, unstable_cache } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 interface Updates {
@@ -11,7 +12,9 @@ interface Updates {
   created_at: string;
 }
 
-async function _getUpdates() {
+async function _getUpdates(cookieStore: ReturnType<typeof cookies>) {
+  const supabase = await createClient(cookieStore);
+
   const { data, error } = await supabase
     .from("updates")
     .select("*")
@@ -25,10 +28,13 @@ async function _getUpdates() {
   return data as Updates[];
 }
 
-export const getUpdates = unstable_cache(_getUpdates, ["updates-cache-key"], {
-  revalidate: 60 * 60 * 24,
-  tags: ["updates"],
-});
+export async function getUpdates() {
+  const cookieStore = cookies();
+
+  return unstable_cache(() => _getUpdates(cookieStore), ["updates"], {
+    tags: ["updates"],
+  })();
+}
 
 export async function postUpdate(
   _: unknown,
@@ -41,6 +47,7 @@ export async function postUpdate(
     return "제목 혹은 내용이 완성되지 않았습니다.";
   }
 
+  const supabase = await createClient();
   const { error } = await supabase.from("updates").insert([{ title, payload }]);
 
   if (error) {

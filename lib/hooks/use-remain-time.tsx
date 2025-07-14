@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { getRemainTimeStatus } from "../get-remain-time-status";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { getRemainTimeStatus } from "../../util/time/get-remain-time-status";
 
 export interface RemainTime {
   hoursLeft: number;
@@ -29,14 +29,17 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
   const lastUpdateRef = useRef(performance.now());
   const rafIdRef = useRef<number>(null);
 
-  const initRemainTime = (_canClick = false) => {
-    setRemainTime({
-      hoursLeft: 24,
-      minutesLeft: 0,
-      secondsLeft: 0,
-      canClick: devMode ? true : _canClick,
-    });
-  };
+  const initRemainTime = useCallback(
+    (_canClick = false) => {
+      setRemainTime({
+        hoursLeft: 24,
+        minutesLeft: 0,
+        secondsLeft: 0,
+        canClick: devMode ? true : _canClick,
+      });
+    },
+    [devMode]
+  );
 
   useEffect(() => {
     const fetchRemainTime = async () => {
@@ -47,7 +50,6 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
         const session: SessionData = json.data;
 
         if (!session.clickedAt) return initRemainTime(true);
-
         const remainStatus = getRemainTimeStatus(session.clickedAt);
         setRemainTime({
           ...remainStatus,
@@ -62,7 +64,7 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
     };
 
     fetchRemainTime();
-  }, [devMode]);
+  }, [devMode, initRemainTime]);
 
   useEffect(() => {
     if (!remainTime || remainTime.canClick) return;
