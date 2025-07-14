@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation";
 import { createClient } from "../server";
-import { logout } from "./logout";
 import { Database } from "@/types/supabase";
 
 type User = Database["public"]["Tables"]["users"]["Row"];

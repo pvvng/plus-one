@@ -2,7 +2,10 @@ import { buildAPIResponse } from "@/util/build-response";
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { updateSession } from "@/lib/session/update";
-import { validateLogSession } from "@/lib/supabase/actions/validate-log-session";
+import {
+  LogSessionStatus,
+  validateLogSession,
+} from "@/lib/supabase/actions/validate-log-session";
 import { createLog } from "@/lib/supabase/actions/create-log";
 import { revalidateTag } from "next/cache";
 
@@ -57,7 +60,7 @@ export async function POST(req: NextRequest) {
 
   // 세션 검증
   const result = await validateLogSession();
-  if (result.status === "TOO_EARLY") {
+  if (result.status === LogSessionStatus.TOO_EARLY) {
     const { hoursLeft, minutesLeft, secondsLeft } = result.remainTimeStatus;
 
     console.warn(
