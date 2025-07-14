@@ -63,7 +63,7 @@ export function useCounts() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, fetchCounts]);
 
   return { total, today, isLoading, error };
 }
