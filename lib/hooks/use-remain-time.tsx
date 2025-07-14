@@ -64,7 +64,7 @@ export function useRemainTime({ devMode = false }: { devMode?: boolean } = {}) {
     };
 
     fetchRemainTime();
-  }, [devMode]);
+  }, [devMode, initRemainTime]);
 
   useEffect(() => {
     if (!remainTime || remainTime.canClick) return;
