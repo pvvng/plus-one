@@ -6,9 +6,16 @@ import {
 } from "@/lib/supabase/actions/get-user-data";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { logout } from "@/lib/supabase/actions/logout";
+import { redirect } from "next/navigation";
 
 export default async function ActivityCalendarController() {
   const result = await getUserData();
+
+  if (result.status === GetUserStatus.DB_MISSING) {
+    await logout(); // 사용자 로그아웃
+    redirect("/login");
+  }
 
   if (result.status !== GetUserStatus.SUCCESS) {
     return <GuestActivityCalendar />;

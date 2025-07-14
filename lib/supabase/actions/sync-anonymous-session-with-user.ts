@@ -8,7 +8,7 @@ export enum SessionLinkStatus {
 }
 
 /**
- * 익명 log session과 현재 유저와의 싱크 맞추는 함수
+ * #### 익명 log session과 현재 유저와의 싱크 맞추는 함수
  * @param uuid - 사용자 id
  * @returns `SessionLinkStatus`
  * - INVALID_SESSION - 유효하지 않은 세션

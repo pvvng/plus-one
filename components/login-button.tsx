@@ -10,7 +10,6 @@ export default function LoginButton() {
     const error = await authLogin({ provider: "kakao" });
 
     if (error) {
-      console.log(error);
       toast(<CustomToast success={false} message={error} />);
     }
   };

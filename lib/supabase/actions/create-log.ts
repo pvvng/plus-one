@@ -1,27 +1,45 @@
 import { createClient } from "../server";
 
+export enum CreateLogStatus {
+  SUCCESS,
+  DB_ERROR,
+}
+
+type CreateLogResult =
+  | { status: CreateLogStatus.SUCCESS; logId: string }
+  | { status: CreateLogStatus.DB_ERROR; error: unknown };
+
 interface CreateLogProps {
   ip: string;
   now: string;
   uuid?: string;
 }
 
-/** 로그 생성 action */
-export async function createLog({ ip, now, uuid }: CreateLogProps) {
+/**
+ * #### 로그 생성 supabase action
+ * @param ip - 사용자의 IP 주소 (string)
+ * @param now - 현재 시간 (ISOString)
+ * @param uuid - 현재 사용자 id (string | undefined)
+ * @returns `CreateLogResult`
+ * - SUCCESS - 로그 생성 성공 (logId 반환)
+ * - DB_ERROR - 로그 생성 실패 (error 반환)
+ */
+export async function createLog({
+  ip,
+  now,
+  uuid,
+}: CreateLogProps): Promise<CreateLogResult> {
   const supabase = await createClient();
 
-  // uuid가 undfiend면 비회원 유저로 취급 (uuid null)
   const { data, error } = await supabase
     .from("click_logs")
     .insert([{ ip, clicked_at: now, uuid: uuid ?? null }])
     .select("id")
     .single();
 
-  if (error) {
-    console.error(error);
+  if (error || !data?.id) {
+    return { status: CreateLogStatus.DB_ERROR, error };
   }
 
-  const logId = data?.id || null;
-
-  return logId;
+  return { status: CreateLogStatus.SUCCESS, logId: data.id };
 }

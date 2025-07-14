@@ -6,8 +6,9 @@ import {
   LogSessionStatus,
   validateLogSession,
 } from "@/lib/supabase/actions/validate-log-session";
-import { createLog } from "@/lib/supabase/actions/create-log";
+import { createLog, CreateLogStatus } from "@/lib/supabase/actions/create-log";
 import { revalidateTag } from "next/cache";
+import { getSession } from "@/lib/session/get";
 
 /**
  * 클릭 이벤트를 처리하는 API 엔드포인트
@@ -22,15 +23,20 @@ export async function POST(req: NextRequest) {
   // 로컬에서 테스트할 경우 무조건 통과
   if ((ip === "::1" || ip === "127.0.0.1") && isDev) {
     // 유저 연동없이 로그만 추가
-    const logId = await createLog({ ip, now });
+    const createLogResult = await createLog({ ip, now });
+    if (createLogResult.status === CreateLogStatus.DB_ERROR) {
+      console.error("로그 생성 실패: ", createLogResult.error);
 
-    if (!logId) {
       return buildAPIResponse({
         success: false,
         message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
         status: 500,
       });
     }
+
+    // 세션 업데이트
+    const logId = createLogResult.logId;
+    await updateSession({ logId, now });
 
     revalidateTag("activity");
 
@@ -49,9 +55,12 @@ export async function POST(req: NextRequest) {
   const uuid = user?.id;
 
   // 세션 검증
-  const result = await validateLogSession();
-  if (result.status === LogSessionStatus.TOO_EARLY) {
-    const { hoursLeft, minutesLeft, secondsLeft } = result.remainTimeStatus;
+  const validateLogSessionResult = await validateLogSession();
+
+  // 유효하지만 유효기간이 남은 세션
+  if (validateLogSessionResult.status === LogSessionStatus.TOO_EARLY) {
+    const { hoursLeft, minutesLeft, secondsLeft } =
+      validateLogSessionResult.remainTimeStatus;
 
     console.warn(
       `[플러스원 차단] uuid: ${uuid}, ip: ${ip}, 남은 시간: ${hoursLeft}시간 ${minutesLeft}분 ${secondsLeft}초`
@@ -63,19 +72,31 @@ export async function POST(req: NextRequest) {
       status: 429,
     });
   }
+  // 유효하지 않은 세션 혹은 유효한 세션이지만 만료 기간이 지났음에도 삭제되지 않은 세션
+  if (
+    validateLogSessionResult.status === LogSessionStatus.INVALID_SESSION ||
+    validateLogSessionResult.status === LogSessionStatus.VALID
+  ) {
+    const session = await getSession();
+    await session.destroy; // 세션 파괴
+  }
 
   // 클릭 로그 작성
-  const logId = await createLog({ uuid, ip, now });
-  if (!logId) {
+  const createLogResult = await createLog({ uuid, ip, now });
+  if (createLogResult.status === CreateLogStatus.DB_ERROR) {
+    console.error("로그 생성 실패: ", createLogResult.error);
+
     return buildAPIResponse({
       success: false,
       message: "플러스원 생성 실패. 잠시 후 다시 시도해주세요",
       status: 500,
     });
   }
+  const logId = createLogResult.logId;
   // 세션 업데이트
   await updateSession({ logId, now });
 
+  // 스트릭 데이터 revalidate
   revalidateTag("activity");
 
   return buildAPIResponse({
