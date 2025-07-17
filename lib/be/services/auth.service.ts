@@ -10,7 +10,7 @@ import {
   insertUser,
   updateUserLastClickedAt,
 } from "../repositories/user.repository";
-import { updateClickLogUUID } from "../repositories/clicked_at.repository";
+import { updateClickLogUUID } from "../repositories/click_logs.repository";
 import { RepositoryStatus } from "../contants/types/repository";
 // types
 import {
@@ -20,6 +20,8 @@ import {
   User,
 } from "@supabase/supabase-js";
 import { AuthServiceResult, AuthServiceStatus } from "../contants/types/auth";
+import { Database } from "@/types/supabase";
+import { getAuthenticatedUser } from "../repositories/auth.repository";
 
 export async function authService(code: string): Promise<AuthServiceResult> {
   const supabase = await createClient(); // client 생성
@@ -38,7 +40,7 @@ export async function authService(code: string): Promise<AuthServiceResult> {
 
   // check user authentication
   const getAuthUserResult = await getAuthenticatedUser({ client: supabase });
-  if (!getAuthUserResult.ok) {
+  if (getAuthUserResult.status !== RepositoryStatus.SUCCESS) {
     // 에러 enum 반환
     return {
       status: AuthServiceStatus.AUTH_USER_ERROR,
@@ -113,29 +115,12 @@ export async function authService(code: string): Promise<AuthServiceResult> {
 
 async function handleExchangeCode(
   code: string,
-  { client: supabase }: { client: SupabaseClient }
+  { client: supabase }: { client: SupabaseClient<Database> }
 ): Promise<{ ok: false; error: AuthError } | { ok: true }> {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) return { ok: false, error };
   return { ok: true };
-}
-
-async function getAuthenticatedUser({
-  client: supabase,
-}: {
-  client: SupabaseClient;
-}): Promise<
-  { ok: false; error: AuthError | string } | { ok: true; data: User }
-> {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (!user) return { ok: false, error: "사용자 없음" };
-  if (error) return { ok: false, error };
-  return { ok: true, data: user };
 }
 
 async function syncUserSession({
@@ -150,7 +135,7 @@ async function syncUserSession({
     uuid: string;
     lastClickedAt: string | null;
   };
-  client: SupabaseClient;
+  client: SupabaseClient<Database>;
   update: typeof updateSession;
   destroy: () => void;
 }): Promise<{ ok: false; error: PostgrestError } | { ok: true }> {

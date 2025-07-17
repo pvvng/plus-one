@@ -1,4 +1,4 @@
-import { PostgrestError } from "@supabase/supabase-js";
+import { AuthError, PostgrestError } from "@supabase/supabase-js";
 
 export enum RepositoryStatus {
   NOT_FOUND = "NOT_FOUND",
@@ -18,4 +18,9 @@ export type RepositoryUpdateResult =
 export type RepositoryInsertResult<T> =
   | { status: RepositoryStatus.NOT_FOUND; error: string }
   | { status: RepositoryStatus.DB_ERROR; error: PostgrestError }
+  | { status: RepositoryStatus.SUCCESS; data: T };
+
+export type RepositoryAuthResult<T> =
+  | { status: RepositoryStatus.NOT_FOUND; error: string }
+  | { status: RepositoryStatus.DB_ERROR; error: AuthError }
   | { status: RepositoryStatus.SUCCESS; data: T };
