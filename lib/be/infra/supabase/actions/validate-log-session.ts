@@ -1,6 +1,6 @@
 import { getRemainTimeStatus } from "@/util/time/get-remain-time-status";
 import { createClient } from "../server";
-import { getSession } from "@/lib/session/get";
+import { getSession } from "@/lib/be/infra/session/get";
 
 export enum LogSessionStatus {
   NO_SESSION,
@@ -29,7 +29,7 @@ type ValidateLogSessionResult =
 export async function validateLogSession(): Promise<ValidateLogSessionResult> {
   const supabase = await createClient();
   const session = await getSession();
-  const { id: sessionId, clickedAt } = session;
+  const { logId: sessionId, clickedAt } = session;
 
   if (!session || !sessionId || !clickedAt) {
     return { status: LogSessionStatus.NO_SESSION };

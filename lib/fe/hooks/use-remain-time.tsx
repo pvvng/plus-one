@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { getRemainTimeStatus } from "../../util/time/get-remain-time-status";
+import { getRemainTimeStatus } from "@/util/time/get-remain-time-status";
 
 export interface RemainTime {
   hoursLeft: number;

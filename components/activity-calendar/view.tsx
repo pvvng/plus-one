@@ -1,7 +1,6 @@
 "use client";
 
 import { ActivityData } from "@/util/time/generate-past-year-data";
-import { useActivityFilter } from "@/lib/hooks/use-activity-filter";
 import CustomToast from "../custom-toast";
 import CalendarBlockTooltip from "./block-tooltip";
 import DropdownSelector from "./dropdown-sort-selector";
@@ -13,6 +12,7 @@ import {
 import { RectangleGroupIcon } from "@heroicons/react/24/solid";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useActivityFilter } from "@/lib/fe/hooks/use-activity-filter";
 
 const theme: ThemeInput = {
   light: ["#f0f0f0", "#3B82F6"],

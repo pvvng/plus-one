@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { toast } from "sonner";
 import CustomToast from "./custom-toast";
-import { authLogin } from "@/lib/supabase/actions/auth-login";
+import { authLogin } from "@/lib/be/infra/supabase/actions/auth-login";
 
 export default function LoginButton() {
   const kakaoLogin = async () => {

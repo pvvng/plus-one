@@ -1,7 +1,7 @@
 "use client";
 
+import { createClient } from "@/lib/fe/supabse/client";
 import { useCallback, useEffect, useState } from "react";
-import { createClient } from "../supabase/client";
 
 /** plus one count realtime subscribe hook */
 export function useCounts() {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useCounts } from "@/lib/hooks/use-count";
-import { usePlusOne } from "@/lib/hooks/use-plus-one";
-import { useRemainTime } from "@/lib/hooks/use-remain-time";
+import { useCounts } from "@/lib/fe/hooks/use-count";
 import PlusBtn from "./plus-btn";
 import PlusOneStatus from "./plus-one-status";
+import { useRemainTime } from "@/lib/fe/hooks/use-remain-time";
+import { usePlusOne } from "@/lib/fe/hooks/use-plus-one";
 
 export default function View() {
   const devMode = process.env.NODE_ENV === "development";
@@ -14,7 +14,7 @@ export default function View() {
     remainTime,
     isLoading: isRemainTimeLoading,
     initRemainTime,
-  } = useRemainTime({ devMode });
+  } = useRemainTime({ devMode: false });
   const { trigger, isLoading: isPlusOneLoading } = usePlusOne({
     onSuccess: initRemainTime,
   });

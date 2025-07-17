@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/be/infra/supabase/server";
 import { generatePastYearData } from "@/util/time/generate-past-year-data";
 import { getKoreanDate } from "@/util/time/get-korean-date";
 import { unstable_cache } from "next/cache";
