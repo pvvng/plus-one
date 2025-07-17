@@ -18,7 +18,7 @@ export async function handleOAuthCallback(req: NextRequest) {
 
   // 코드 존재하지 않음
   if (!code) {
-    console.error("로그인 중 에러 발생: 코드가 존재하지 않음");
+    console.error("로그인 실패: 코드가 존재하지 않음");
     return redirectToAuthError(origin);
   }
 
@@ -26,14 +26,31 @@ export async function handleOAuthCallback(req: NextRequest) {
   const serviceResult = await authService(code);
 
   switch (serviceResult.status) {
-    case AuthServiceStatus.AUTH_ERROR:
-    case AuthServiceStatus.DB_ERROR:
-      console.error(serviceResult.error);
+    case AuthServiceStatus.EXCHANGE_CODE_ERROR:
+      console.error("로그인 세션 생성 실패: ", serviceResult.error);
       return redirectToAuthError(origin);
+
+    case AuthServiceStatus.AUTH_USER_ERROR:
+      console.error("사용자 정보 조회 실패: ", serviceResult.error);
+      return redirectToAuthError(origin);
+
+    case AuthServiceStatus.FIND_USER_ERROR:
+      console.error("DB 사용자 정보 조회 실패: ", serviceResult.error);
+      return redirectToAuthError(origin);
+
+    case AuthServiceStatus.INSERT_USER_ERROR:
+      console.error("신규 사용자 추가 실패: ", serviceResult.error);
+      return redirectToAuthError(origin);
+
+    case AuthServiceStatus.SYNC_SESSION_ERROR:
+      console.error("세션 동기화 실패: ", serviceResult.error);
+      return redirectToAuthError(origin);
+
     case AuthServiceStatus.SUCCESS:
       return redirectUser(req, origin, next);
+
     default:
-      console.error("정의되지 않은 인증 상태", serviceResult);
+      console.error("정의되지 않은 인증 상태: ", serviceResult);
       return redirectToAuthError(origin);
   }
 }

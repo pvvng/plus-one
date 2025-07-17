@@ -31,7 +31,7 @@ export async function authService(code: string): Promise<AuthServiceResult> {
   if (!exchangeCodeResult.ok) {
     // 에러 enum 반환
     return {
-      status: AuthServiceStatus.AUTH_ERROR,
+      status: AuthServiceStatus.EXCHANGE_CODE_ERROR,
       error: exchangeCodeResult.error,
     };
   }
@@ -41,7 +41,7 @@ export async function authService(code: string): Promise<AuthServiceResult> {
   if (!getAuthUserResult.ok) {
     // 에러 enum 반환
     return {
-      status: AuthServiceStatus.AUTH_ERROR,
+      status: AuthServiceStatus.AUTH_USER_ERROR,
       error: getAuthUserResult.error,
     };
   }
@@ -52,12 +52,15 @@ export async function authService(code: string): Promise<AuthServiceResult> {
 
   // 사용자 검색
   const findUserResult = await findUserById({ uuid, client: supabase });
+  // DB 에러
   if (findUserResult.status === RepositoryStatus.DB_ERROR) {
     return {
-      status: AuthServiceStatus.DB_ERROR,
+      status: AuthServiceStatus.FIND_USER_ERROR,
       error: findUserResult.error,
     };
-  } else if (findUserResult.status === RepositoryStatus.NOT_FOUND) {
+  }
+  // 신규 사용자
+  if (findUserResult.status === RepositoryStatus.NOT_FOUND) {
     // insert new user
     const insertUserResult = await insertUser({
       uuid,
@@ -69,7 +72,7 @@ export async function authService(code: string): Promise<AuthServiceResult> {
     // insert error 처리
     if (insertUserResult.status !== RepositoryStatus.SUCCESS) {
       return {
-        status: AuthServiceStatus.DB_ERROR,
+        status: AuthServiceStatus.INSERT_USER_ERROR,
         error: insertUserResult.error,
       };
     }
@@ -99,7 +102,7 @@ export async function authService(code: string): Promise<AuthServiceResult> {
   // sync error 처리
   if (!syncResult.ok) {
     return {
-      status: AuthServiceStatus.DB_ERROR,
+      status: AuthServiceStatus.SYNC_SESSION_ERROR,
       error: syncResult.error,
     };
   }
