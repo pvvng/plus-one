@@ -1,19 +1,20 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import {
   RepositoryGetResult,
   RepositoryStatus,
   RepositoryUpdateResult,
 } from "../contants/types/repository";
 import { ClickLogs } from "../contants/types/supabase-table";
-import { createClient } from "../infra/supabase/server";
 
 export async function updateClickLogUUID({
   uuid,
   logId,
+  client: supabase,
 }: {
   uuid: string;
   logId: string;
+  client: SupabaseClient;
 }): Promise<RepositoryUpdateResult> {
-  const supabase = await createClient();
   const { error } = await supabase
     .from("click_logs")
     .update({ uuid: uuid })
@@ -29,11 +30,11 @@ export async function updateClickLogUUID({
 /** logId로 로그 데이터 호출 */
 export async function findClickLogById({
   logId,
+  client: supabase,
 }: {
   logId: string;
+  client: SupabaseClient;
 }): Promise<RepositoryGetResult<ClickLogs>> {
-  const supabase = await createClient();
-
   const { data, error } = await supabase
     .from("click_logs")
     .select("*")

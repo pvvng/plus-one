@@ -1,3 +1,4 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import {
   RepositoryGetResult,
   RepositoryUpdateResult,
@@ -6,16 +7,14 @@ import {
 } from "../contants/types/repository";
 import { Users } from "../contants/types/supabase-table";
 
-import { createClient } from "../infra/supabase/server";
-
 /** uuid로 DB 사용자 정보 호출 */
 export async function findUserById({
   uuid,
+  client: supabase,
 }: {
   uuid: string;
+  client: SupabaseClient;
 }): Promise<RepositoryGetResult<Users>> {
-  const supabase = await createClient();
-
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -39,12 +38,12 @@ export async function findUserById({
 export async function updateUserLastClickedAt({
   uuid,
   clickedAt,
+  client: supabase,
 }: {
   uuid: string;
   clickedAt: string;
+  client: SupabaseClient;
 }): Promise<RepositoryUpdateResult> {
-  const supabase = await createClient();
-
   const { error } = await supabase
     .from("users")
     .update({ last_clicked_at: clickedAt })
@@ -63,18 +62,18 @@ export async function insertUser({
   email,
   username,
   provider,
+  client: supabase,
 }: {
   uuid: string;
   email: string;
   username: string;
   provider: string;
+  client: SupabaseClient;
 }): Promise<
   RepositoryInsertResult<{
     id: string;
   }>
 > {
-  const supabase = await createClient();
-
   const { data, error } = await supabase
     .from("users")
     .insert({

@@ -1,6 +1,7 @@
 import { User } from "@supabase/supabase-js";
 
 export function extractUserInfo(user: User) {
+  const uuid = user.id;
   const userMetadata = user.user_metadata;
   const username: string =
     userMetadata.name ??
@@ -10,5 +11,5 @@ export function extractUserInfo(user: User) {
   const email: string = user.email ?? userMetadata.email ?? "unknown-email";
   const provider = user.app_metadata.provider || "unknown-provider";
 
-  return { username, email, provider };
+  return { uuid, username, email, provider };
 }
