@@ -57,6 +57,8 @@ export async function plusOneService({
         error: createLogResult.error,
       };
     }
+
+    return { status: PlusOneServiceStatus.SUCCESS };
   }
 
   const getUUIDResult = await getUUID({ client: supabase });

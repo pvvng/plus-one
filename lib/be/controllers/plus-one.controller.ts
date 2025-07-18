@@ -9,7 +9,6 @@ export async function handlePlusOneCallback(req: NextRequest) {
   const ip = getClientIP(req);
   const now = new Date().toISOString();
 
-  // 로컬에서 테스트할 경우 무조건 통과
   const plusOneServiceResult = await plusOneService({
     ip,
     now,
@@ -65,6 +64,7 @@ export async function handlePlusOneCallback(req: NextRequest) {
         minutesLeft: m,
         secondsLeft: s,
       } = plusOneServiceResult.remainTimeStatus;
+      console.warn(`warning: ${ip} 플러스원 재시도`);
       return buildAPIResponse({
         success: false,
         status: 429,

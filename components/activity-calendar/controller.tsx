@@ -1,14 +1,11 @@
-import { getActivity } from "@/app/(main)/actions";
+import { getActivity, getUserData, GetUserStatus } from "@/app/(main)/actions";
 import ActivityCalendarView from "./view";
 
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  getUserData,
-  GetUserStatus,
-} from "@/lib/be/infra/supabase/actions/get-user-data";
-import { logout } from "@/lib/be/infra/supabase/actions/logout";
+
+import { logout } from "@/app/login/actions";
 
 export default async function ActivityCalendarController() {
   const result = await getUserData();
