@@ -1,13 +1,13 @@
-import { getSession } from "@/lib/session/get";
+import { getSession } from "@/lib/be/infra/session/get";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   const session = await getSession();
-  const { id, clickedAt } = session;
+  const { logId, clickedAt } = session;
   return NextResponse.json(
     {
       success: true,
-      data: { id, clickedAt },
+      data: { logId, clickedAt },
     },
     { status: 200 }
   );
