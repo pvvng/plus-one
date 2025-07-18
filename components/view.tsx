@@ -14,7 +14,7 @@ export default function View() {
     remainTime,
     isLoading: isRemainTimeLoading,
     initRemainTime,
-  } = useRemainTime({ devMode: false });
+  } = useRemainTime({ devMode });
   const { trigger, isLoading: isPlusOneLoading } = usePlusOne({
     onSuccess: initRemainTime,
   });

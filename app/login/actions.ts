@@ -1,4 +1,5 @@
 "use server";
+
 import { createClient } from "@/lib/be/infra/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -35,7 +36,7 @@ export const authLogin = async ({
   return "로그인 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
 };
 
-export enum LogoutStatus {
+enum LogoutStatus {
   SUCCESS,
   ERROR,
 }

@@ -17,7 +17,6 @@ import {
   AuthError,
   PostgrestError,
   SupabaseClient,
-  User,
 } from "@supabase/supabase-js";
 import { AuthServiceResult, AuthServiceStatus } from "../contants/types/auth";
 import { Database } from "@/types/supabase";
@@ -127,8 +126,8 @@ async function syncUserSession({
   sessionData,
   userinfo,
   client,
+  // destroy,
   update,
-  destroy,
 }: {
   sessionData: SessionData;
   userinfo: {

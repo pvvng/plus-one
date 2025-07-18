@@ -78,7 +78,7 @@ export async function getActivity(userId: string | undefined) {
 
 type User = Database["public"]["Tables"]["users"]["Row"];
 
-export enum GetUserStatus {
+enum GetUserStatus {
   NOT_LOGGED_IN,
   DB_MISSING,
   ERROR,
