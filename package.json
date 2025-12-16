@@ -18,7 +18,7 @@
     "gsap": "^3.13.0",
     "iron-session": "^8.0.4",
     "moment-timezone": "^0.6.0",
-    "next": "15.3.6",
+    "next": "15.3.8",
     "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-activity-calendar": "^2.7.13",
